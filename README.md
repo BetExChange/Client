@@ -30,12 +30,9 @@
 
 ### Logging In
 #### Requirements:
-- When the user opens the app, then they should be prompted to log in with a valid username and password.
-- When the user enters valid credentials and clicks the login button, then they should be logged into the app and granted access.
-- When the user leaves any field empty or enters invalid credentials, then they should receive an error or prompt to fill out the fields correctly.
+- When the user opens the app, then they should be prompted to choose a role to log in with (either Buyer or Seller).
+- When the user clicks either the "Buyer" or the "Seller" button, then they should be logged into the app and granted access.
 
-#### Edge Cases:
-- If the user enters invalid credentials, a message should be displayed.
 ---
 
 ### Logging Out
@@ -44,6 +41,7 @@
 
 #### Requirements:
 - When the user clicks the Logout button, then they should be logged out and redirected to the login screen.
+
 ---
 
 ### Notifications
@@ -52,9 +50,11 @@
 
 #### Requirements:
 - A navigation bar with the following elements should exist: title of the page, notifications icon, username and a user icon.
-- When the user makes a purchase, a relevant notification should be sent.
-- When the user creates an offer, a relevant notification should be sent.
-- When an offer the user has created gets accepted, a relevant notification should be sent.
+- When the user clicks the notifications button, then all his notifications should be displayed.
+
+#### Edge Cases:
+- If the number of notifications is zero, display a message.
+
 ---
 
 ### Viewing Products
@@ -83,7 +83,7 @@
 - When the user clicks on "Create Offer" and enters a valid quantity, price, duration, payment method, address and has enough balance then the offer should be created.
 - When the user places a new offer, their balance should update, subtracting the amount from their funds.
 - When the user places a new offer, they should receive the appropriate notification.
-- When the user enters an invalid value, an error should be displayed.
+- When the user enters a negative number or the number zero in any of the input fields, then an error should be displayed.
 
 #### Edge Cases:
 - If the user attempts to place an offer without enough balance, an error should be displayed.
@@ -100,7 +100,8 @@
 
 #### Requirements:
 - When the user clicks on an existing offer, then the "new offer" form should appear with its fields pre-completed (based on the existing offer).
-- Upon submission the purchase should be completed.
+- Upon submission, the user should receive the appropriate notification.
+- Upon submission, the corresponding position's status should be updated.
 
 #### Edge Cases:
 - If the user attempts to place an offer without enough balance, an error should be displayed.
@@ -199,7 +200,7 @@
 - The seller’s dashboard should update with the new listing.
 
 #### Edge Cases:
-- If required fields are left empty or are invalid, an error should be displayed.
+- If required fields are left empty or are invalid(negative number or 0), an error should be displayed.
 
 ---
 
@@ -258,7 +259,8 @@
 
 #### Requirements:
 - When the seller clicks on an offer at the market state section, a new "Add position" form should be displayed with the fields pre-completed (based on the selected offer).
-- Upon submission the sale should be completed.
+- Upon submission, the user should receive the appropriate notification.
+- Upon submission, the corresponding offer's status should be updated.
 
 ### Edge Cases:
 - If the offer is no longer available by the time the seller attempts to accept it, display an error message.
@@ -300,7 +302,7 @@ type Offer = {
   creatorId: number;
   quantity: number;
   price: number;
-  duration: number;
+  duration: Date;
   paymentMethod: string;
   address: string;
   status: 'open' | 'accepted' | 'expired';
@@ -317,6 +319,7 @@ type Position = {
   pieces: number;
   minPrice: number;
   expirationDate: Date;
+  status: 'open' | 'accepted' | 'expired';
 };
 ```
 
@@ -364,7 +367,7 @@ type ExchangeActivity = {
 
 ### "API" Methods:
 #### Login
-- Finds a user by matching the provided username.
+- Signs in the user based on the selected role.
 - Sets the local storage value that holds the authenticated user.
 - `login = (username: string)`
 #### Logout
