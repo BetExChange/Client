@@ -451,22 +451,22 @@ type ExchangeActivity = {
 
 ---
 
-### Time Estimation (34 hours total):
+### Time Estimation (38 hours total):
 - Initializing and setting up the project (1 hour).
-- Setting up the local storage, creating data etc. (1.5 hours).
+- Setting up the local storage, creating data etc. (2 hours).
 
-- Implementing **Login/Logout** (1.5 hour).
+- Implementing **Login/Logout** (2 hours).
 - Implementing **Notifications** (3 hours).
 - Implementing **View products** (3 hours).
 - Implementing **Create a new offer** (3 hours).
-- Implementing **Purchase an existing offer** (1.5 hour).
+- Implementing **Purchase an existing offer** (2 hours).
 - Implementing **Search for products** (3 hours).
-- Implementing **View balance** (1.5 hour).
+- Implementing **View balance** (2 hours).
 
-- Implementing **View listed products** (1.5 hour).
+- Implementing **View listed products** (2 hours).
 - Implementing **View product details** (3 hours).
-- Implementing **Add new positions** (1.5 hour).
-- Implementing **Remove existing positions** (1.5 hour).
+- Implementing **Add new positions** (2 hours).
+- Implementing **Remove existing positions** (2 hours).
 - Implementing **Check exchange activity** (3 hours).
 - Implementing **View market state** (3 hours).
-- Implementing **Accept an offer** (1.5 hour).
+- Implementing **Accept an offer** (2 hours).
