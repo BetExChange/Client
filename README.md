@@ -151,9 +151,9 @@
 
 #### Requirements:
 - A navigation bar with the following elements should exist: title of the page, notifications icon, username, and a user icon.
-- When a user’s listing receives an offer, a relevant notification should be sent.
-- When a user's listing gets sold, a relevant notification should be sent.
-- When a user adds a new listing, a relevant notification should be sent.
+- When a user’s position receives an offer, a relevant notification should be sent.
+- When a user's position gets sold, a relevant notification should be sent.
+- When a user adds a new position, a relevant notification should be sent.
 
 ---
 
@@ -183,7 +183,7 @@
 - A "positions" section should exist and display a table with Pieces, Price and Expiration for each product.
 - A "Add position" button should also exist in the "positions" section.
 - A "exchange activity" section should exist, displaying information for the products based on a specified time period.
-- A "current market state" section should exist, displaying listings and offers for the product from the market.
+- A "current market state" section should exist, displaying positions and offers for the product from the market.
 
 ---
 
@@ -191,7 +191,7 @@
 #### Prerequisites:
 - User must be logged in.
 - At least one product should exist.
-- User must be on the product details page of a listing.
+- User must be on the product details page of a position.
 
 #### Requirements:
 - When the user clicks "Add position" and enters a valid minimum price, number of pieces and expiration date, a new position is added.
@@ -207,16 +207,16 @@
 #### Prerequisites:
 - User must be logged in.
 - At least one product should exist.
-- User must be on the product details page of a listing.
+- User must be on the product details page of a position.
 
 #### Requirements:
-- When the user selects a listing and clicks "Remove Position," the product should be removed from the marketplace.
+- When the user selects a position and clicks "Remove Position," the product should be removed from the marketplace.
 - A confirmation message should appear before removal.
 - The seller should receive a notification confirming the removal.
 - The seller’s dashboard should update and no longer display the removed position.
 
 #### Edge Cases:
-- If the listing has active offers, a warning should be displayed before allowing removal.
+- If the position has active offers, a warning should be displayed before allowing removal.
 
 ---
 
@@ -224,7 +224,7 @@
 #### Prerequisites:
 - User must be logged in.
 - At least one product should exist.
-- User must be on the product details page of a listing.
+- User must be on the product details page of a position.
 
 #### Requirements:
 - When the seller navigates to the exchange activity section, they can specify a time period and receive the following information about a product: "Latest price matched", "Minimum bid price" and "Market depth (pieces)".
@@ -239,10 +239,10 @@
 #### Prerequisites:
 - User must be logged in.
 - At least one product should exist.
-- User must be on the product details page of a listing.
+- User must be on the product details page of a position.
 
 #### Requirements:
-- When the seller navigates to the market state section, they should see a summary of active offers and listings for the specified product.
+- When the seller navigates to the market state section, they should see a summary of active offers and positions for the specified product.
 
 #### Edge Cases:
 - If no market data is available, a message should indicate that there is currently no market activity.
@@ -253,7 +253,7 @@
 #### Prerequisites:
 - User must be logged in.
 - At least one product should exist.
-- User must be on the product details page of a listing.
+- User must be on the product details page of a position.
 - At least one offer for the product should exist.
 
 #### Requirements:
@@ -270,7 +270,7 @@
 #### User
 ```
 type User = {
-  id: string;
+  id: number;
   username: string;
   role: 'buyer' | 'seller';
   balance: number;
@@ -281,7 +281,7 @@ type User = {
 #### Product
 ```
 type Product = {
-  id: string;
+  id: number;
   title: string;
   imageUrl: string;
   description?: string;
@@ -295,9 +295,9 @@ type Product = {
 #### Offer
 ```
 type Offer = {
-  id: string;
-  productId: string;
-  creatorId: string;
+  id: number;
+  productId: number;
+  creatorId: number;
   quantity: number;
   price: number;
   duration: number;
@@ -311,12 +311,12 @@ type Offer = {
 #### Position
 ```
 type Position = {
-  id: string;
-  productId: string;
-  sellerId: string;
+  id: number;
+  productId: number;
+  sellerId: number;
   pieces: number;
   minPrice: number;
-  expirationDate: string;
+  expirationDate: Date;
 };
 ```
 
@@ -325,20 +325,20 @@ type Position = {
 #### Notification
 ```
 type Notification = {
-  id: string;
-  userId: string;
+  id: number;
+  userId: number;
   message: string;
-  timestamp: string;
+  timestamp: Timestamp;
   read: boolean;
 };
 ```
 
 ---
 
-#### Market State
+#### Exchange Activity
 ```
-type MarketState = {
-  productId: string;
+type ExchangeActivity = {
+  productId: number;
   latestPriceMatched: number;
   minBidPrice: number;
   marketDepth: number;
@@ -349,8 +349,82 @@ type MarketState = {
 
 ### Data Management
 #### Local Storage:
-- Storage and retrieval of entities (users, products, offers, positions, notifications).
-- CRUD operations (create, read, update, delete).
+- LocalStorage will be used for the storage and retrieval of entities (users, products, offers etc.) and all CRUD operations.
+
+#### Local Storage Keys:
+- Users – Stores user information.
+- AuthUser - Stores the authenticated user.
+- Products – Stores product listings.
+- Offers – Stores buy/sell offers.
+- Positions – Stores seller positions.
+- Notifications – Stores user notifications.
+- ExchangeActivities - Stores exchange activity for products.
+
+---
+
+### "API" Methods:
+#### Login
+- Finds a user by matching the provided username.
+- Sets the local storage value that holds the authenticated user.
+- `login = (username: string)`
+#### Logout
+- Clears the local storage value that holds the authenticated user.
+- `logout= ()`
+
+#### Get Products
+- Retrieves all stored products.
+- Returns an array of products.
+- `getProducts = ()`
+
+#### Get Product By ID
+- Finds a product based on its **productId**.
+- Returns the product if found, otherwise null.
+- `getProductById = (productId: number)`
+
+#### Create Offer
+- Adds a new offer to local storage.
+- Updates the stored list and returns the created offer.
+- `createOffer = (offer: Offer)`
+
+#### Purchase Offer
+- Finds an offer by **offerId** and checks if it's still available (open status).
+- Updates its status to accepted.
+- Returns the updated offer if successful, otherwise null.
+- `purchaseOffer = (offerId: number)`
+
+#### Get Positions by sellerId
+- Finds all positions based on a **sellerId**.
+- Returns an array of positions.
+- `getPositionsBySellerId =( sellerId: number)`.
+
+#### Add Position
+- Adds a new position for a seller.
+- Updates local storage and returns the created position.
+- `addPosition = (position: Position)`
+
+#### Remove Position
+- Removes a position from local storage using its **positionId**.
+- Updates the stored list after removal.
+- `removePosition = (positionId: number)`
+
+#### Get Notifications
+- Retrieves notifications for a specific **userId**.
+- Returns an array of notifications.
+- `getNotifications = (userId: number)`
+
+#### Add Notification
+- Adds a new notification to the user's notification list.
+- Updates local storage and returns the created notification.
+- `addNotification = (notification: Notification, userId: number)`
+
+#### Get Market State
+- Gathers and summarizes market data for a specific **productId**.
+- Returns:
+  - **latestPriceMatched**: The most recent matched price.
+  - **minBidPrice**: The lowest available offer price.
+  - **marketDepth**: Total quantity of items available.
+- If no market data exists, returns null.
+- `getMarketState = (productId: number)`
 
 ---
 
@@ -367,7 +441,32 @@ type MarketState = {
     - /seller (protected)
     - /product/:id (protected)
 
+---
+
 ### UI Design
+#### Mockups for the Pages:
 ![Buyer Page Mock](buyer.jpg)
-![Seller Page Mock](seller-table.jpg)
-![Product Details Page Mock](product-details.jpg)
+![Seller Page Mock](seller-table.png)
+![Product Details Page Mock](product-details.png)
+
+---
+
+### Time Estimation (34 hours total):
+- Initializing and setting up the project (1 hour).
+- Setting up the local storage, creating data etc. (1.5 hours).
+
+- Implementing **Login/Logout** (1.5 hour).
+- Implementing **Notifications** (3 hours).
+- Implementing **View products** (3 hours).
+- Implementing **Create a new offer** (3 hours).
+- Implementing **Purchase an existing offer** (1.5 hour).
+- Implementing **Search for products** (3 hours).
+- Implementing **View balance** (1.5 hour).
+
+- Implementing **View listed products** (1.5 hour).
+- Implementing **View product details** (3 hours).
+- Implementing **Add new positions** (1.5 hour).
+- Implementing **Remove existing positions** (1.5 hour).
+- Implementing **Check exchange activity** (3 hours).
+- Implementing **View market state** (3 hours).
+- Implementing **Accept an offer** (1.5 hour).
