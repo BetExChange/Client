@@ -1,7 +1,7 @@
 # Bet Exchange
 
 ## Features
-### For the buyer:
+### For the Buyer:
 - Login
 - Logout
 - Notifications
@@ -13,7 +13,7 @@
 
 ---
 
-### For the seller:
+### For the Seller:
 - Login
 - Logout
 - Notifications
@@ -262,3 +262,112 @@
 
 ### Edge Cases:
 - If the offer is no longer available by the time the seller attempts to accept it, display an error message.
+
+---
+
+## Implementation Plan
+### Entities
+#### User
+```
+type User = {
+  id: string;
+  username: string;
+  role: 'buyer' | 'seller';
+  balance: number;
+};
+```
+---
+
+#### Product
+```
+type Product = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  description?: string;
+  offers: Offer[];
+  bestPriceOffer?: Offer;
+  bestQuantityOffer?: Offer;
+};
+```
+---
+
+#### Offer
+```
+type Offer = {
+  id: string;
+  productId: string;
+  creatorId: string;
+  quantity: number;
+  price: number;
+  duration: number;
+  paymentMethod: string;
+  address: string;
+  status: 'open' | 'accepted' | 'expired';
+};
+```
+---
+
+#### Position
+```
+type Position = {
+  id: string;
+  productId: string;
+  sellerId: string;
+  pieces: number;
+  minPrice: number;
+  expirationDate: string;
+};
+```
+
+---
+
+#### Notification
+```
+type Notification = {
+  id: string;
+  userId: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+};
+```
+
+---
+
+#### Market State
+```
+type MarketState = {
+  productId: string;
+  latestPriceMatched: number;
+  minBidPrice: number;
+  marketDepth: number;
+};
+```
+
+---
+
+### Data Management
+#### Local Storage:
+- Storage and retrieval of entities (users, products, offers, positions, notifications).
+- CRUD operations (create, read, update, delete).
+
+---
+
+### State Management & Routing
+#### State Management:
+- **Global State**: React Context.
+- **Local State**: React hooks (useState).
+
+#### Routing:
+- React Router
+- Routes:
+    - /login
+    - /buyer (protected)
+    - /seller (protected)
+    - /product/:id (protected)
+
+### UI Design
+![Buyer Page Mock](buyer.jpg)
+![Seller Page Mock](seller-table.jpg)
+![Product Details Page Mock](product-details.jpg)
