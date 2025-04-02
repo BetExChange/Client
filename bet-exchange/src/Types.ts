@@ -40,7 +40,7 @@ export type Position = {
 
 export type Notification = {
     id: number;
-    userId: number;
+    userId:  number | null
     message: string;
     timestamp: Date;
     read: boolean;
@@ -54,8 +54,11 @@ export type ExchangeActivity = {
 };
 
 export type AuthContextType = {
-  userRole: 'buyer' | 'seller' | null;
-  isLoggedIn: boolean;
-  login: (role: 'buyer' | 'seller') => void;
-  logout: () => void;
+    username: string | null,
+    userId: number | null,
+    userRole: 'buyer' | 'seller' | null;
+    balance: number | null,
+    isLoggedIn: boolean;
+    login: (role: 'buyer' | 'seller') => void;
+    logout: () => void;
 };
