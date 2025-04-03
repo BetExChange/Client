@@ -10,10 +10,8 @@ export type Product = {
     title: string;
     imageUrl: string;
     description?: string;
-    offers: Offer[];
-    positions: Position[];
-    bestPriceOffer?: Offer;
-    bestQuantityOffer?: Offer;
+    bestPricePosition?: Position;
+    bestQuantityPosition?: Position;
 };
 
 export type Offer = {

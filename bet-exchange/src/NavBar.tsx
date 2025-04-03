@@ -73,12 +73,12 @@ const Navbar: React.FC = () => {
           onOpenChange={handlePopoverOpen}
         >
           <Badge count={unreadCount}>
-            <BellOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+            <BellOutlined style={{ fontSize: "30px", cursor: "pointer" }} />
           </Badge>
         </Popover>
 
         {/* Username */}
-        <span style={{ fontSize: "16px", fontWeight: "bold" }}>{username}</span>
+        <span style={{ fontSize: "20px", fontWeight: "bold" }}>{username}</span>
 
         {/* User Icon with Dropdown */}
         <Dropdown menu={{ items: menuItems }} placement="bottomRight">

@@ -17,7 +17,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => { 
     if (storedUserRole !== null) {
       const authenticatedUser = users.find((user: { role: string }) => user.role === storedUserRole);
-      console.log(authenticatedUser);
       if (authenticatedUser) {
           setUsername(authenticatedUser.username);
           setUserId(authenticatedUser.userId);
