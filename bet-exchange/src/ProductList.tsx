@@ -2,11 +2,8 @@ import { List } from "antd";
 import ProductItem from "./ProductItem";
 import useProducts from "./useProducts";
 
-type ProductListProps = {
-    openDrawer: () => void;
-};
 
-const ProductList: React.FC<ProductListProps> = ({ openDrawer }) => {
+const ProductList: React.FC = ({}) => {
     const { products } = useProducts();
 
   return (
@@ -25,7 +22,7 @@ const ProductList: React.FC<ProductListProps> = ({ openDrawer }) => {
       itemLayout="horizontal"
       renderItem={(product) => (
         <List.Item style={{ display: "flex", justifyContent: "center" }}>
-          <ProductItem product={product} openDrawer={openDrawer} />
+          <ProductItem product={product} />
         </List.Item>
       )}
     />

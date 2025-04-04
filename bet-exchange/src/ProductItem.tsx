@@ -1,15 +1,22 @@
-import { Card, Button, Divider, Badge } from "antd";
+import { Card, Button, Divider, Badge, Drawer } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import { Product } from "./Types";
+import OverviewForm from "./OverviewForm";
+import { useState } from "react";
 
 type ProductItemProps = {
   product: Product;
-  openDrawer: () => void;
 };
 
-const ProductItem: React.FC<ProductItemProps> = ({ product, openDrawer }) => {
+const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
+    const [drawerVisible, setDrawerVisible] = useState(false);
+
+    const openDrawer = () => setDrawerVisible(true);
+    const closeDrawer = () => setDrawerVisible(false);
+
     return (
-        <Card hoverable style={{ minWidth: 300, textAlign: "center", borderRadius: "10px", padding: "10px" }}>
+        <>
+            <Card hoverable style={{ minWidth: 300, textAlign: "center", borderRadius: "10px", padding: "10px" }}>
             {/* Product Name */}
             <h3 style={{ marginBottom: "10px" }}>{product.title}</h3>
     
@@ -64,6 +71,10 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, openDrawer }) => {
                 </Button>
             )}
         </Card>
+        <Drawer closable={false} placement="right" onClose={closeDrawer} visible={drawerVisible}>
+            <OverviewForm product={product}/>
+        </Drawer>
+        </>
       );
 };
 

@@ -1,8 +1,11 @@
 import { Button, Divider, Form } from "antd";
-import useProducts from "./useProducts";
+import { Product } from "./Types";
 
-const OverviewForm: React.FC = () => {
-    const {products} = useProducts();
+type OverwiewFormProps = {
+  product: Product;
+};
+
+const OverviewForm: React.FC<OverwiewFormProps> = ({product}) => {
 
     return (
         <Form layout="vertical" style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center",height: "95vh"}}>
@@ -10,7 +13,12 @@ const OverviewForm: React.FC = () => {
     
           <Divider style={{ margin: "10px 0" }} />
           
-          {/* image */}
+          <img
+            src={product.imageUrl}
+            alt={product.title}
+            style={{ width: "100%", maxWidth: "300px", height: "auto", borderRadius: "10px", marginBottom: "10px" }}
+          /> 
+          <h3>{product.title}</h3>
           
           <p>Choose an existing offer or create your own.</p>
           
