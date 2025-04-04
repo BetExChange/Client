@@ -3,7 +3,7 @@ import Search from "antd/es/input/Search";
 import ProductList from "./ProductList";
 
 function BuyerPage (){
-    const handleSearch = (value: string) => {
+    const handleSearch = () => {
         
     };
 
