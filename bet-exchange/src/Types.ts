@@ -17,7 +17,7 @@ export type Product = {
 export type Offer = {
     id: number;
     productId: number;
-    creatorId: number;
+    buyerId: number;
     quantity: number;
     price: number;
     duration: Date;

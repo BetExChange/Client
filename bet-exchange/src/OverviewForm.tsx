@@ -3,9 +3,10 @@ import { Product } from "./Types";
 
 type OverwiewFormProps = {
   product: Product;
+  closeDrawer: () => void;
 };
 
-const OverviewForm: React.FC<OverwiewFormProps> = ({product}) => {
+const OverviewForm: React.FC<OverwiewFormProps> = ({product, closeDrawer}) => {
 
     return (
         <Form layout="vertical" style={{display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center",height: "95vh"}}>
@@ -37,7 +38,7 @@ const OverviewForm: React.FC<OverwiewFormProps> = ({product}) => {
           <Button block style={{ backgroundColor: "orange", color: "white" }}>Place your offer</Button>
     
           {/* Cancel Button */}
-          <Button block style={{ backgroundColor: "blue", color: "white" }}>Cancel</Button>
+          <Button block danger onClick={closeDrawer}>Cancel</Button>
         </Form>
     );
 };

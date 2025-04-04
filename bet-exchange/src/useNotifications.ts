@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Notification } from "./Types";
 
 const useNotifications = () => {
-  const [notifications, setNotifications] = useState<{ id: number; userId: number; message: string; timestamp: string; read: boolean }[]>([]);
-  
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
   useEffect(() => {
     const authUser = localStorage.getItem("AuthUser");
     const users = JSON.parse(localStorage.getItem("Users") || "[]");
@@ -36,10 +36,31 @@ const useNotifications = () => {
     localStorage.setItem("Notifications", JSON.stringify(updatedNotifications));
   };
 
+  // Function to create a new notification
+  const createNotification = (userId: number, message: string) => {
+    const allNotifications: Notification[] = JSON.parse(localStorage.getItem("Notifications") || "[]");
+
+    const newNotification: Notification = {
+      id: allNotifications.length > 0 ? allNotifications[allNotifications.length - 1].id + 1 : 1,
+      userId,
+      message,
+      timestamp: new Date(),
+      read: false,
+    };
+
+    const updatedNotifications = [...allNotifications, newNotification];
+
+    localStorage.setItem("Notifications", JSON.stringify(updatedNotifications));
+
+    // If the notification belongs to the current user, update state
+    setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+  };
+
   return {
     notifications,
     unreadCount: notifications.filter((n) => !n.read).length,
     markAsRead,
+    createNotification,
   };
 };
 
