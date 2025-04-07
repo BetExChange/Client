@@ -71,7 +71,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
                 )}
             </Card>
 
-            <Drawer closable={false} placement="right" onClose={closeDrawer} open={drawerVisible}>
+            <Drawer push={false} closable={false} placement="right" onClose={closeDrawer} open={drawerVisible} style={{maxWidth:'400'}}>
                 {selectedForm === "overview" ? (
                     <OverviewForm product={product} closeDrawer={closeDrawer} openDrawer={openDrawer}/>
                 ) : (

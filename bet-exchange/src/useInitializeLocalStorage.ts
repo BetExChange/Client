@@ -1,144 +1,25 @@
 import { useEffect } from "react";
+import { Notification, ExchangeActivity, Offer, Position, Product, User } from "./Types";
 
 const useInitializeLocalStorage = () => {
   useEffect(() => {
     const keysWithSampleData = {
       Users: [
-        { id: 1, username: "buyer123", role: "buyer", balance: 1000 },
+        { id: 1, username: "buyer123", role: "buyer", balance: 10000 },
         { id: 2, username: "seller456", role: "seller", balance: 5000 },
-      ],
+      ] as User[],
       AuthUser: null,
       Products: [
-        { id: 1, title: "Product A", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996",
-        bestPricePosition: {
-            id: 1,
-            productId: 1,
-            sellerId: 1,
-            pieces: 5,
-            minPrice: 90,
-            expirationDate: new Date().toISOString(),
-            status: "open",
-        },
-        bestQuantityPosition: {
-            id: 2,
-            productId: 1,
-            sellerId: 3,
-            pieces: 10,
-            minPrice: 95,
-            expirationDate: new Date().toISOString(),
-            status: "open",
-        }
-      },
-        { id: 2, title: "Product B", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996", 
-          bestPricePosition: {
-            id: 4,
-            productId: 2,
-            sellerId: 1,
-            pieces: 6,
-            minPrice: 96,
-            expirationDate: new Date().toISOString(),
-            status: "open",
-        },
-        bestQuantityPosition: {
-            id: 2,
-            productId: 2,
-            sellerId: 3,
-            pieces: 50,
-            minPrice: 100,
-            expirationDate: new Date().toISOString(),
-            status: "open",
-        }
-        },
+        { id: 1, title: "Product A", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
+        { id: 2, title: "Product B", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
         { id: 3, title: "Product C", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
-        { id: 4, title: "Product D", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996",
-          bestPricePosition: {
-            id: 5,
-            productId: 4,
-            sellerId: 1,
-            pieces: 6,
-            minPrice: 96,
-            expirationDate: new Date().toISOString(),
-            status: "open",
-        },
-        bestQuantityPosition: {
-            id: 6,
-            productId: 4,
-            sellerId: 3,
-            pieces: 50,
-            minPrice: 100,
-            expirationDate: new Date().toISOString(),
-            status: "open",
-        }
-        },
-      ],
-      Offers: [
-        {
-          id: 1,
-          productId: 1,
-          creatorId: 1,
-          quantity: 10,
-          price: 100,
-          duration: new Date().toISOString(),
-          paymentMethod: "PayPal",
-          address: "123",
-          status: "open",
-        }
-      ],
-      Positions: [
-        {
-          id: 1,
-          productId: 1,
-          sellerId: 1,
-          pieces: 5,
-          minPrice: 90,
-          expirationDate: new Date().toISOString(),
-          status: "open",
-        }
-      ],
+        { id: 4, title: "Product D", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
+      ] as Product[],
+      Offers: [] as Offer[],
+      Positions: [] as Position[],
       Notifications: [
-        {
-          id: 1,
-          userId: 1,
-          message: "Your offer has been created!",
-          timestamp: new Date().toISOString(),
-          read: false,
-        },
-        {
-          id: 2,
-          userId: 1,
-          message: "Your offer has been created! 2",
-          timestamp: new Date().toISOString(),
-          read: false,
-        },
-        {
-          id: 3,
-          userId: 1,
-          message: "Your offer has been created! 3",
-          timestamp: new Date().toISOString(),
-          read: false,
-        },
-        {
-          id: 4,
-          userId: 1,
-          message: "Your offer has been created! 4",
-          timestamp: new Date().toISOString(),
-          read: false,
-        },
-        {
-          id: 5,
-          userId: 1,
-          message: "Your offer has been created! 5",
-          timestamp: new Date().toISOString(),
-          read: false,
-        },
-        {
-          id: 6,
-          userId: 1,
-          message: "Your offer has been created! 6",
-          timestamp: new Date().toISOString(),
-          read: true,
-        },
-      ],
+        { id: 1, userId: 1, message: "Your offer has been created!", timestamp: new Date(), read: false },
+      ] as Notification[],
       ExchangeActivities: [
         {
           productId: 1,
@@ -146,8 +27,39 @@ const useInitializeLocalStorage = () => {
           minBidPrice: 90,
           marketDepth: 15,
         }
-      ],
+      ] as ExchangeActivity[],
     };
+
+    const positions: Position[] = [];
+    keysWithSampleData.Products.forEach((product) => {
+      for (let i = 1; i <= 6; i++) {
+        const offset = product.id * 10;
+        positions.push({
+          id: positions.length + 1,
+          productId: product.id + 1,
+          sellerId: i,
+          pieces: 5 * i + offset,
+          minPrice: 10 + i * 5 + product.id * 2,
+          expirationDate: new Date(new Date().getTime() + (i + product.id) * 86400000),
+          status: "open",
+        });
+      }
+    
+      const productPositions = positions.filter((position) => position.productId === product.id);
+    
+      const bestPricePosition = productPositions.reduce((prev, curr) => {
+        return prev.minPrice < curr.minPrice ? prev : curr;
+      }, productPositions[0]);
+    
+      const bestQuantityPosition = productPositions.reduce((prev, curr) => {
+        return prev.pieces > curr.pieces ? prev : curr;
+      }, productPositions[0]);
+    
+      product.bestPricePosition = bestPricePosition;
+      product.bestQuantityPosition = bestQuantityPosition;
+    });
+    
+    keysWithSampleData.Positions = positions;
 
     Object.entries(keysWithSampleData).forEach(([key, value]) => {
       if (!localStorage.getItem(key)) {
