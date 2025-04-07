@@ -1,7 +1,8 @@
 import { Button, DatePicker, Divider, Form, InputNumber, Select, Typography, message } from "antd";
 import { Product, Offer } from "./Types";
 import { useState } from "react";
-import useNotifications from "./useNotifications";
+import { useNotificationContext } from "./NotificationContext";
+import { useAuth } from "./AuthProvider";
 
 const { Text } = Typography;
 
@@ -11,7 +12,8 @@ type OfferFormProps = {
 };
 
 const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer }) => {
-    const {createNotification} = useNotifications();
+  const { createNotification } = useNotificationContext();
+  const { userId, balance, updateBalance } = useAuth();
   const [form] = Form.useForm();
   const [unitPrice, setUnitPrice] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
@@ -35,19 +37,25 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer }) => {
           address: values.location,
           status: 'open'
         };
+        
+        if (userId !== null && balance !== null && grandTotal <= balance) {
+            const existingOffers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
+            existingOffers.push(newOffer);
+            localStorage.setItem("Offers", JSON.stringify(existingOffers));
 
-        const existingOffers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
-        existingOffers.push(newOffer);
-        localStorage.setItem("Offers", JSON.stringify(existingOffers));
-
-        message.success("Offer placed successfully!");
-        createNotification(1, `Your offer for Product: ${product.title} has been created!`);
-        createNotification(2, `An offer for your Product: ${product.title} has been created!`);
-        closeDrawer();
+            message.success("Offer placed successfully!");
+            createNotification(1, `Your offer for Product: ${product.title} has been created!`);
+            createNotification(2, `An offer for your Product: ${product.title} has been created!`);
+            console.log(userId, grandTotal);
+            userId != null && updateBalance(userId, grandTotal);
+            closeDrawer();
+        } else {
+            message.error("Not sufficient balance!");
+        }
       })
       .catch(errorInfo => {
         console.log("Validation Failed:", errorInfo);
-      });
+    });
   };
 
   return (

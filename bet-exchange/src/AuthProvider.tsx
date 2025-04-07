@@ -6,7 +6,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const storedUserRole = localStorage.getItem("AuthUser") as 'buyer' | 'seller' | null;
-  const users = JSON.parse(localStorage.getItem("Users") || "[]");
   const [username, setUsername] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<'buyer' | 'seller' | null>(storedUserRole);
   const [userId, setUserId] = useState<number | null>(null);
@@ -16,10 +15,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => { 
     if (storedUserRole !== null) {
+      const users = JSON.parse(localStorage.getItem("Users") || "[]");
       const authenticatedUser = users.find((user: { role: string }) => user.role === storedUserRole);
       if (authenticatedUser) {
           setUsername(authenticatedUser.username);
-          setUserId(authenticatedUser.userId);
+          setUserId(authenticatedUser.id);
           setBalance(authenticatedUser.balance);
       }
     }
@@ -44,8 +44,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate("/login");
   };
 
+  const updateBalance = (userId: number, price: number) => {
+    const users = JSON.parse(localStorage.getItem("Users") || "[]");
+  
+    const updatedUsers = users.map((user: any) => {
+      if (user.id === userId) {
+        const newBalance = user.balance - price;
+        user.balance = newBalance;
+  
+        setBalance(newBalance);
+      }
+      return user;
+    });
+  
+    localStorage.setItem("Users", JSON.stringify(updatedUsers));
+  };
+  
+  
+
   return (
-    <AuthContext.Provider value={{ username, userRole, userId, isLoggedIn, balance, login, logout }}>
+    <AuthContext.Provider value={{ username, userRole, userId, isLoggedIn, balance, login, logout, updateBalance }}>
       {children}
     </AuthContext.Provider>
   );

@@ -59,4 +59,5 @@ export type AuthContextType = {
     isLoggedIn: boolean;
     login: (role: 'buyer' | 'seller') => void;
     logout: () => void;
+    updateBalance: (userId: number, price: number) => void;
 };

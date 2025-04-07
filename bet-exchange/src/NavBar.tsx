@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { Layout, MenuProps, Avatar, Dropdown, Typography, Badge, Popover, List } from "antd";
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth } from "./AuthProvider";
-import useNotifications from "./useNotifications";
+import { useNotificationContext } from "./NotificationContext";
 
 const { Header } = Layout;
 const { Title } = Typography;
 
 const Navbar: React.FC = () => {
   const { logout, username , balance } = useAuth();
-  const { notifications, unreadCount, markAsRead } = useNotifications();
+  const { notifications, unreadCount, markAsRead } = useNotificationContext();
   const [popoverVisible, setPopoverVisible] = useState(false);
 
   const handlePopoverOpen = () => setPopoverVisible(!popoverVisible);
