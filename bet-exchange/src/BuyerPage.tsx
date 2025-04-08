@@ -1,11 +1,10 @@
 import Navbar from "./NavBar";
 import Search from "antd/es/input/Search";
 import ProductList from "./ProductList";
+import useSearch from "./useSearch";
 
 function BuyerPage (){
-    const handleSearch = () => {
-        
-    };
+    const { filteredProducts, searchProducts } = useSearch();
 
     return (
         <div className="buyerPage">
@@ -15,11 +14,11 @@ function BuyerPage (){
                     placeholder="Search for products..."
                     enterButton="Search"
                     size="large"
-                    onSearch={handleSearch}
+                    onSearch={searchProducts}
                     style={{ width: 900}}
                 />
             </div>
-            <ProductList />
+            <ProductList products={filteredProducts}/>
         </div>
     )
 }

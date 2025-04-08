@@ -10,8 +10,8 @@ export type Product = {
     title: string;
     imageUrl: string;
     description?: string;
-    bestPricePosition?: Position;
-    bestQuantityPosition?: Position;
+    bestPricePosition?: Position | null;
+    bestQuantityPosition?: Position | null;
 };
 
 export type Offer = {

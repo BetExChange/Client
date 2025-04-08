@@ -17,9 +17,7 @@ const useInitializeLocalStorage = () => {
       ] as Product[],
       Offers: [] as Offer[],
       Positions: [] as Position[],
-      Notifications: [
-        { id: 1, userId: 1, message: "Your offer has been created!", timestamp: new Date(), read: false },
-      ] as Notification[],
+      Notifications: [] as Notification[],
       ExchangeActivities: [
         {
           productId: 1,

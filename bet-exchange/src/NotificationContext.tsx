@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Notification } from "./Types";
+import { useAuth } from "./AuthProvider";
 
 type NotificationContextType = {
   notifications: Notification[];
@@ -10,19 +11,23 @@ type NotificationContextType = {
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const NotificationProvider: React.FC<{  children: React.ReactNode }> = ({ children }) => {
+  const {userRole} = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const loadNotifications = () => {
-    const authUser = localStorage.getItem("AuthUser");
+    
     const users = JSON.parse(localStorage.getItem("Users") || "[]");
 
-    if (authUser) {
-      const user = users.find((u: { role: string }) => u.role === authUser);
+    if (userRole) {
+      const user = users.find((u: { id: number, role: string }) => u.role === userRole);
+
       if (user) {
         const allNotifications = JSON.parse(localStorage.getItem("Notifications") || "[]");
         const userNotifications = allNotifications.filter((n: Notification) => n.userId === user.id);
         setNotifications(userNotifications);
+      } else {
+        console.warn("No matching user found for role:", userRole);
       }
     }
   };
@@ -33,7 +38,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     return () => {
       window.removeEventListener("local-storage-update", loadNotifications);
     };
-  }, []);
+  }, [userRole]);
 
   const markAsRead = (notificationId: number) => {
     setNotifications((prev) =>

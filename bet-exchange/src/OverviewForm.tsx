@@ -28,7 +28,7 @@ const OverviewForm: React.FC<OverwiewFormProps> = ({product, closeDrawer, openDr
       <PositionList product={product} openDrawer={openDrawer} closeDrawer={closeDrawer}/>
 
       {/* Custom Offer Button */}
-      <Button block style={{ backgroundColor: "orange", color: "white" }} onClick={() => openDrawer("offer")}>Place your offer</Button>
+      <Button block style={{ backgroundColor: "orange", color: "white", marginBottom:'10px'}} onClick={() => openDrawer("offer")}>Place your offer</Button>
 
       {/* Cancel Button */}
       <Button block danger onClick={closeDrawer}>Cancel</Button>

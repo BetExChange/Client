@@ -1,11 +1,13 @@
 import { List } from "antd";
 import ProductItem from "./ProductItem";
-import useProducts from "./useProducts";
+import { Product } from "./Types";
+
+type ProductListProps = {
+  products: Product[];
+}
 
 
-const ProductList: React.FC = ({}) => {
-    const { products } = useProducts();
-
+const ProductList: React.FC<ProductListProps> = ({products}) => {
   return (
     <List
       grid={{

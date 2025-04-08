@@ -21,7 +21,7 @@ const PositionList: React.FC<PositionListProps> = ({ product, openDrawer, closeD
                 maxWidth: "1200px",
                 margin: "auto",
             }}
-            itemLayout="horizontal"
+            itemLayout="vertical"
             renderItem={(position) => (
                 <List.Item style={{ display: "flex", justifyContent: "center" }}>
                     <PositionItem position={position} product={product} openDrawer={openDrawer} closeDrawer={closeDrawer}/>
