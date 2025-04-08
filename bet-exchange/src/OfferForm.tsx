@@ -64,6 +64,7 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
               pos.id === position.id ? { ...pos, status: "accepted" } : pos
             );
             localStorage.setItem("Positions", JSON.stringify(updatedPositions));
+            window.dispatchEvent(new Event("localPositionsUpdated"));
           }
           closeDrawer();
         } else {

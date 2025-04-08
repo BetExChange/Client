@@ -82,18 +82,16 @@ const useProducts = (): useProductsAPI => {
   useEffect(() => {
     getProducts();
 
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === "Products" || event.key === "Positions") {
-        getProducts();
-      }
+    const handleUpdate = () => {
+      getProducts();
     };
 
-    window.addEventListener('storage', handleStorageChange);
-
+    window.addEventListener("localPositionsUpdated", handleUpdate);
+  
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("localPositionsUpdated", handleUpdate);
     };
-  }, [products]);
+  }, []);
 
   return { products, getProducts, getPositions, getBestPositions };
 };
