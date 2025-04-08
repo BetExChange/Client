@@ -12,6 +12,8 @@ export type Product = {
     description?: string;
     bestPricePosition?: Position | null;
     bestQuantityPosition?: Position | null;
+    barcode?: number | null;
+    brand?: string | null;
 };
 
 export type Offer = {

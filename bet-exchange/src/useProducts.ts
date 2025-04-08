@@ -6,6 +6,7 @@ type useProductsAPI = {
   getProducts: () => void;
   getPositions: (productId: number) => Position[];
   getBestPositions: (product: Product) => void;
+  getUserPositionedProducts: (userId: number) => Product[]
 };
 
 const useProducts = (): useProductsAPI => {
@@ -93,7 +94,35 @@ const useProducts = (): useProductsAPI => {
     };
   }, []);
 
-  return { products, getProducts, getPositions, getBestPositions };
+  const getUserPositionedProducts = (userId: number): Product[] => {
+    const storedPositions = localStorage.getItem("Positions");
+    const storedProducts = localStorage.getItem("Products");
+  
+    if (!storedPositions || !storedProducts) return [];
+  
+    try {
+      const positions: Position[] = JSON.parse(storedPositions);
+      const products: Product[] = JSON.parse(storedProducts);
+  
+      const userPositionedProductIds = new Set(
+        positions
+          .filter((pos) => pos.sellerId === userId)
+          .map((pos) => pos.productId)
+      );
+  
+      const userProducts = products.filter((product) =>
+        userPositionedProductIds.has(product.id)
+      );
+  
+      return userProducts;
+    } catch (error) {
+      console.error("Error getting user's positioned products:", error);
+      return [];
+    }
+  };
+  
+
+  return { products, getProducts, getPositions, getBestPositions, getUserPositionedProducts };
 };
 
 export default useProducts;
