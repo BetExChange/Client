@@ -1,4 +1,3 @@
-// AddPositionModal.tsx
 import React, { useState } from 'react';
 import { Modal, InputNumber, DatePicker, Form, Button } from 'antd';
 import { Position } from './Types';
@@ -9,11 +8,13 @@ type AddPositionModalProps = {
   onAdd: (position: Position) => void;
   productId: number;
   sellerId: number;
+  minPrice?: number;
+  pieces?: number;
 };
 
-const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, onAdd, productId, sellerId }) => {
-  const [minPrice, setMinPrice] = useState<number>(0);
-  const [pieces, setPieces] = useState<number>(1);
+const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, onAdd, productId, sellerId, minPrice: propMinPrice = 0, pieces: propPieces = 1 }) => {
+  const [minPrice, setMinPrice] = useState<number>(propMinPrice);
+  const [pieces, setPieces] = useState<number>(propPieces);
   const [expirationDate, setExpirationDate] = useState<Date | null>(null);
 
   const handleOk = () => {

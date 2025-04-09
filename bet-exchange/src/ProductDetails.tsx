@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import { Button, Col, DatePicker, Descriptions, DescriptionsProps, Divider, Row, Typography } from 'antd';
+import { useLocation } from 'react-router-dom';
+import { Button, Col, DatePicker, Descriptions, DescriptionsProps, Divider, Form, Row, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Navbar from './NavBar';
 import { Product } from './Types';
@@ -8,11 +8,11 @@ import PositionTable from './PositionTable';
 import AddPositionModal from './AddPositionModal';
 import useProducts from './useProducts';
 import { useAuth } from './AuthProvider';
+import OfferList from './OfferList';
 
 const { Title } = Typography;
 
 const ProductDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const product: Product = location.state?.product;
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,7 +38,7 @@ const ProductDetails: React.FC = () => {
     { key: '2', label: 'Total Inventory', children: `${Math.floor(Math.random() * 50)}` },
     { key: '3', label: 'Available', children: `${Math.floor(Math.random() * 50)}` },
   ];
-
+  
   return (
     <div style={{ padding: '0 20px' }}>
       <Navbar />
@@ -113,20 +113,24 @@ const ProductDetails: React.FC = () => {
     <Divider />
 
     {/* Exchange Activity Section */}
-    <Row gutter={[16, 16]} align="middle">
-      <Col span={24}>
+    <Row  align="middle" justify="space-between" style={{ marginBottom: 40 }}>
+      <Col>
         <Title level={3} style={{ margin: 0 }}>Exchange Activity</Title>
       </Col>
 
       {/* Date Range + Button */}
       <Col>
-        <span style={{ marginRight: 8 }}>From (date):</span>
-        <DatePicker onChange={(date) => setFromDate(date)} />
+        <Form.Item label="From (date):" style={{ marginBottom: 0 }}>
+          <DatePicker style={{ width: 300 }} onChange={(date) => setFromDate(date)} />
+        </Form.Item>
       </Col>
+
       <Col>
-        <span style={{ marginRight: 8 }}>To (date):</span>
-        <DatePicker onChange={(date) => setToDate(date)} />
+        <Form.Item label="To (date):" style={{ marginBottom: 0 }}>
+          <DatePicker style={{ width: 300 }} onChange={(date) => setToDate(date)} />
+        </Form.Item>
       </Col>
+
       <Col>
         <Button
           icon={<SearchOutlined />}
@@ -143,9 +147,10 @@ const ProductDetails: React.FC = () => {
           Search
         </Button>
       </Col>
+    </Row>
 
-      {/* Display exchange data always */}
-      <Col span={24}>
+    <Row>
+      <Col>
         <Descriptions column={1} layout="horizontal" style={{ marginTop: 16 }}>
           <Descriptions.Item label="Last price matched">
             {exchangeData?.lastPrice ?? '0.00'} €
@@ -163,12 +168,15 @@ const ProductDetails: React.FC = () => {
     <Divider />
 
     {/* Current Market State Section*/}
-    <Row>
+    <Row  style={{marginBottom: 40}}>
       <Col>
         <Title level={3} style={{ margin: 0 }}>Current Market State</Title>
       </Col>
     </Row>
 
+    <Row>
+      <OfferList product={product}/>
+    </Row>
     </div>
   );
 };

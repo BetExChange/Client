@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Product, Position } from "./Types";
+import { Product, Position, Offer } from "./Types";
 import { message } from "antd";
 
 type useProductsAPI = {
   products: Product[];
   getProducts: () => void;
   getPositions: (productId: number) => Position[];
+  getOffers: (productId: number) => Offer[];
   getBestPositions: (product: Product) => void;
   getUserPositionedProducts: (userId: number) => Product[];
   getUserPositionsForProduct: (userId: number, productId: number) => Position[];
@@ -37,6 +38,18 @@ const useProducts = (): useProductsAPI => {
       return allPositions.filter((pos) => pos.productId === productId);
     } catch (error) {
       console.error("Failed to parse positions from localStorage", error);
+      return [];
+    }
+  };
+
+  const getOffers = (productId: number): Offer[] => {
+    const storedOffers = localStorage.getItem("Offers");
+    if (!storedOffers) return [];
+    try {
+      const allOffers: Offer[] = JSON.parse(storedOffers);
+      return allOffers.filter((offer) => offer.productId === productId);
+    } catch (error) {
+      console.error("Failed to parse offers from localStorage", error);
       return [];
     }
   };
@@ -173,7 +186,7 @@ const useProducts = (): useProductsAPI => {
   };
   
 
-  return { products, getProducts, getPositions, getBestPositions, getUserPositionedProducts, getUserPositionsForProduct, deletePosition, addPosition };
+  return { products, getProducts, getPositions, getOffers, getBestPositions, getUserPositionedProducts, getUserPositionsForProduct, deletePosition, addPosition };
 };
 
 export default useProducts;

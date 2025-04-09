@@ -59,6 +59,26 @@ const useInitializeLocalStorage = () => {
     
     keysWithSampleData.Positions = positions;
 
+    const offers: Offer[] = [];
+    keysWithSampleData.Products.forEach((product) => {
+      for (let i = 1; i <= 6; i++) {
+        const offset = product.id * 15;
+        offers.push({
+          id: offers.length + 1,
+          productId: product.id + 1,
+          buyerId: 1,
+          quantity: 5 * i + offset,
+          price: 10 + i * 4 + product.id * 3,
+          duration: new Date(new Date().getTime() + (i + product.id) * 86400000),
+          paymentMethod: "Card A",
+          address: "Store",
+          status: "open",
+        });
+      }
+    });
+    
+    keysWithSampleData.Offers = offers;
+
     Object.entries(keysWithSampleData).forEach(([key, value]) => {
       if (!localStorage.getItem(key)) {
         localStorage.setItem(key, JSON.stringify(value));
