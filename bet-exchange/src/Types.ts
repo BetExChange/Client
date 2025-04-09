@@ -1,5 +1,5 @@
 export type User = {
-    id: number;
+    id: number | null;
     username: string;
     role: 'buyer' | 'seller';
     balance: number;
@@ -19,7 +19,7 @@ export type Product = {
 export type Offer = {
     id: number;
     productId: number;
-    buyerId: number;
+    buyerId:number | null;
     quantity: number;
     price: number;
     duration: Date;
@@ -31,7 +31,7 @@ export type Offer = {
 export type Position = {
     id: number;
     productId: number;
-    sellerId: number;
+    sellerId: number | null;
     pieces: number;
     minPrice: number;
     expirationDate: Date;

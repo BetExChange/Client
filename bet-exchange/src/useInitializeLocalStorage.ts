@@ -10,10 +10,10 @@ const useInitializeLocalStorage = () => {
       ] as User[],
       AuthUser: null,
       Products: [
-        { id: 1, title: "Product A", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
-        { id: 2, title: "Product B", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
-        { id: 3, title: "Product C", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
-        { id: 4, title: "Product D", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" },
+        { id: 1, title: "Product A", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996", barcode: 534662326, brand: "Brand 1", description: "Description of the product." },
+        { id: 2, title: "Product B", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996", barcode: 123454545, brand: "Brand 2", description: "Description of the product." },
+        { id: 3, title: "Product C", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996", barcode: 563458985, brand: "Brand 3", description: "Description of the product." },
+        { id: 4, title: "Product D", imageUrl: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996", barcode: 325994746, brand: "Brand 4", description: "Description of the product." },
       ] as Product[],
       Offers: [] as Offer[],
       Positions: [] as Position[],
@@ -35,7 +35,7 @@ const useInitializeLocalStorage = () => {
         positions.push({
           id: positions.length + 1,
           productId: product.id + 1,
-          sellerId: i,
+          sellerId: 2,
           pieces: 5 * i + offset,
           minPrice: 10 + i * 5 + product.id * 2,
           expirationDate: new Date(new Date().getTime() + (i + product.id) * 86400000),

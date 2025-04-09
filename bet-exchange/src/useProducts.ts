@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { Product, Position } from "./Types";
+import { message } from "antd";
 
 type useProductsAPI = {
   products: Product[];
   getProducts: () => void;
   getPositions: (productId: number) => Position[];
   getBestPositions: (product: Product) => void;
-  getUserPositionedProducts: (userId: number) => Product[]
+  getUserPositionedProducts: (userId: number) => Product[];
+  getUserPositionsForProduct: (userId: number, productId: number) => Position[];
+  deletePosition: (positionId: number) => void;
+  addPosition: (position: Position)  => void;
 };
 
 const useProducts = (): useProductsAPI => {
@@ -120,9 +124,56 @@ const useProducts = (): useProductsAPI => {
       return [];
     }
   };
+
+  const getUserPositionsForProduct = (userId: number, productId: number): Position[] => {
+    const storedPositions = localStorage.getItem("Positions");
+    if (!storedPositions) return [];
+  
+    try {
+      const allPositions: Position[] = JSON.parse(storedPositions);
+      return allPositions.filter(
+        (pos) => pos.productId === productId && pos.sellerId === userId
+      );
+    } catch (error) {
+      console.error("Failed to parse positions from localStorage", error);
+      return [];
+    }
+  };
+
+  const deletePosition = (positionId: number) => {
+    const storedPositions = localStorage.getItem("Positions");
+    if (!storedPositions) return;
+  
+    try {
+      const positions: Position[] = JSON.parse(storedPositions);
+      const updatedPositions = positions.filter((pos) => pos.id !== positionId);
+  
+      localStorage.setItem("Positions", JSON.stringify(updatedPositions));
+  
+      window.dispatchEvent(new Event("localPositionsUpdated"));
+      message.success("Position deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting position:", error);
+    }
+  };
+  
+  const addPosition = (position: Position) => {
+    const storedPositions = localStorage.getItem("Positions");
+    try {
+      const positions: Position[] = storedPositions ? JSON.parse(storedPositions) : [];
+  
+      const updatedPositions = [...positions, position];
+      localStorage.setItem("Positions", JSON.stringify(updatedPositions));
+  
+      window.dispatchEvent(new Event("localPositionsUpdated"));
+      message.success("Position added successfully!")
+    } catch (error) {
+      console.error("Error adding position:", error);
+    }
+  };
   
 
-  return { products, getProducts, getPositions, getBestPositions, getUserPositionedProducts };
+  return { products, getProducts, getPositions, getBestPositions, getUserPositionedProducts, getUserPositionsForProduct, deletePosition, addPosition };
 };
 
 export default useProducts;

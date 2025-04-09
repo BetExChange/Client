@@ -6,6 +6,7 @@ import PrivateRoute from "./PrivateRoute";
 import BuyerPage from "./BuyerPage";
 import SellerPage from "./SellerPage";
 import { NotificationProvider } from "./NotificationContext";
+import ProductDetails from "./ProductDetails";
 
 function App() {
   useInitializeLocalStorage();
@@ -25,6 +26,10 @@ function App() {
 
             <Route element={<PrivateRoute allowedRole="seller" />}>
               <Route path="/seller" element={<SellerPage />} />
+            </Route>
+
+            <Route element={<PrivateRoute allowedRole="seller" />}>
+              <Route path="/product/:id" element={<ProductDetails />} />
             </Route>
 
             {/* Redirect unhandled routes */}

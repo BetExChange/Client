@@ -5,7 +5,7 @@ import SellerTable from "./SellerTable";
 
 const { Title } = Typography;
 
-function SellerPage (){
+const SellerPage: React.FC = () => {
     return (
         <div className="sellerPage">
             <Navbar />
