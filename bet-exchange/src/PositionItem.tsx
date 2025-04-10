@@ -1,4 +1,4 @@
-import { Button, Drawer } from "antd";
+import { Badge, Button, Drawer } from "antd";
 import { Position, Product } from "./Types";
 import { useState } from "react";
 import OfferForm from "./OfferForm";
@@ -8,9 +8,10 @@ type PositionItemProps = {
     product: Product;
     closeDrawer: () => void;
     openDrawer: (form: "overview" | "offer") => void;
+    color: string;
 }
 
-const PositionItem: React.FC<PositionItemProps> = ({position, product,}) => {
+const PositionItem: React.FC<PositionItemProps> = ({position, product, color}) => {
     const [drawerVisible, setDrawerVisible] = useState(false);
     
     const openDrawer = () => {
@@ -21,9 +22,15 @@ const PositionItem: React.FC<PositionItemProps> = ({position, product,}) => {
 
     return (
         <>
-        <Button onClick={openDrawer}>
-            {position.minPrice}€ x {position.pieces}
-        </Button>
+        <Badge count={position.pieces} offset={[-5, 30]} color="#b8b6b6" style={{ color: "black" }}>
+            <Button 
+                type="primary" 
+                style={{ backgroundColor: color, borderColor: color, width: "100px"}} 
+                    onClick={openDrawer}
+            >
+                {position.minPrice} €
+            </Button>
+        </Badge>
         <Drawer closable={false} placement="right" onClose={closeDrawer} open={drawerVisible}>
             <OfferForm product={product} position={position} closeDrawer={closeDrawer} />
         </Drawer>

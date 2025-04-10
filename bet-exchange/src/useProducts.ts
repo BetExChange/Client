@@ -33,9 +33,21 @@ const useProducts = (): useProductsAPI => {
   const getPositions = (productId: number): Position[] => {
     const storedPositions = localStorage.getItem("Positions");
     if (!storedPositions) return [];
+  
     try {
       const allPositions: Position[] = JSON.parse(storedPositions);
-      return allPositions.filter((pos) => pos.productId === productId);
+      const filtered = allPositions.filter((pos) => pos.productId === productId);
+  
+      const lowestPrices = [...filtered]
+        .sort((a, b) => a.minPrice - b.minPrice)
+        .slice(0, 3)
+        .reverse();
+  
+      const highestPrices = [...filtered]
+        .sort((a, b) => b.minPrice - a.minPrice)
+        .slice(0, 3);
+  
+      return [...lowestPrices, ...highestPrices];
     } catch (error) {
       console.error("Failed to parse positions from localStorage", error);
       return [];
@@ -45,9 +57,21 @@ const useProducts = (): useProductsAPI => {
   const getOffers = (productId: number): Offer[] => {
     const storedOffers = localStorage.getItem("Offers");
     if (!storedOffers) return [];
+
     try {
       const allOffers: Offer[] = JSON.parse(storedOffers);
-      return allOffers.filter((offer) => offer.productId === productId);
+      const filtered = allOffers.filter((offer) => offer.productId === productId);
+
+      const highestPrices = [...filtered]
+        .sort((a, b) => b.price - a.price)
+        .slice(0, 3)
+        .reverse();
+  
+        const lowestPrices = [...filtered]
+        .sort((a, b) => a.price - b.price)
+        .slice(0, 3)
+  
+      return [...highestPrices, ...lowestPrices];
     } catch (error) {
       console.error("Failed to parse offers from localStorage", error);
       return [];

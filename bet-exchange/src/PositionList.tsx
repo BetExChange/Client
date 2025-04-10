@@ -22,9 +22,9 @@ const PositionList: React.FC<PositionListProps> = ({ product, openDrawer, closeD
                 margin: "auto",
             }}
             itemLayout="vertical"
-            renderItem={(position) => (
+            renderItem={(position, index) => (
                 <List.Item style={{ display: "flex", justifyContent: "center" }}>
-                    <PositionItem position={position} product={product} openDrawer={openDrawer} closeDrawer={closeDrawer}/>
+                    <PositionItem position={position} product={product} openDrawer={openDrawer} closeDrawer={closeDrawer} color={index < 3 ? "teal" : "orange"}/>
                 </List.Item>
             )}
             locale={{

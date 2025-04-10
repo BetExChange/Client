@@ -15,9 +15,9 @@ const OfferList: React.FC<OfferListProps> = ({ product }) => {
         <List
             grid={{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 4, xl: 6 }}
             dataSource={offers}
-            renderItem={(offer) => (
+            renderItem={(offer, index,) => (
                 <List.Item>
-                    <OfferItem offer={offer} product={product} />
+                    <OfferItem offer={offer} product={product} color={index < 3 ? "teal" : "orange"}/>
                 </List.Item>
             )}
             locale={{

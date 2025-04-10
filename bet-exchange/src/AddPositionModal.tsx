@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, InputNumber, DatePicker, Form, Button } from 'antd';
+import { Modal, InputNumber, DatePicker, Form, Button, Divider } from 'antd';
 import { Position } from './Types';
 
 type AddPositionModalProps = {
@@ -36,14 +36,16 @@ const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, o
   return (
     <Modal open={visible} onCancel={onClose} footer={null}>
       <h3>Add position</h3>
-      <Form layout="vertical">
-        <Form.Item label="Min Price:">
+      <Divider />
+      <Form layout="horizontal" labelCol={{ span: 4 }} wrapperCol={{ span: 18 }} labelAlign='left'>
+        <Form.Item label="Min Price:" >
           <InputNumber
             value={minPrice}
             onChange={(val) => setMinPrice(val ?? 0)}
             addonAfter="€"
             min={0}
             controls={false}
+            style={{width: "50%"}}
           />
         </Form.Item>
         <Form.Item label="Pieces:">
@@ -51,18 +53,19 @@ const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, o
             value={pieces}
             onChange={(val) => setPieces(val ?? 1)}
             min={1}
+            style={{width: "50%"}}
           />
         </Form.Item>
         <Form.Item label="Expiration:">
           <DatePicker
-            style={{ width: "100%" }}
+            style={{ width: "50%" }}
             onChange={(date) => setExpirationDate(date?.toDate() ?? null)}
           />
         </Form.Item>
 
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
           <Button onClick={onClose}>Cancel</Button>
-          <Button type="primary" onClick={handleOk}>Ok</Button>
+          <Button type="primary" onClick={handleOk}>OK</Button>
         </div>
       </Form>
     </Modal>

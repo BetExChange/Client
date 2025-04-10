@@ -31,13 +31,12 @@ const useInitializeLocalStorage = () => {
     const positions: Position[] = [];
     keysWithSampleData.Products.forEach((product) => {
       for (let i = 1; i <= 6; i++) {
-        const offset = product.id * 10;
         positions.push({
           id: positions.length + 1,
           productId: product.id + 1,
           sellerId: 2,
-          pieces: 5 * i + offset,
-          minPrice: 10 + i * 5 + product.id * 2,
+          pieces: Math.floor(Math.random() * 100) + 1,
+          minPrice: Math.floor(Math.random() * 50) + 1,
           expirationDate: new Date(new Date().getTime() + (i + product.id) * 86400000),
           status: "open",
         });
@@ -62,13 +61,12 @@ const useInitializeLocalStorage = () => {
     const offers: Offer[] = [];
     keysWithSampleData.Products.forEach((product) => {
       for (let i = 1; i <= 6; i++) {
-        const offset = product.id * 15;
         offers.push({
           id: offers.length + 1,
           productId: product.id + 1,
           buyerId: 1,
-          quantity: 5 * i + offset,
-          price: 10 + i * 4 + product.id * 3,
+          quantity: Math.floor(Math.random() * 100) + 1,
+          price: Math.floor(Math.random() * 50) + 1,
           duration: new Date(new Date().getTime() + (i + product.id) * 86400000),
           paymentMethod: "Card A",
           address: "Store",
