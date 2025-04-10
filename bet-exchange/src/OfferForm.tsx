@@ -48,35 +48,48 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
         };
 
         if (userId !== null && balance !== null && grandTotal <= balance) {
-          const existingOffers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
-          existingOffers.push(newOffer);
-          localStorage.setItem("Offers", JSON.stringify(existingOffers));
-
-          if (position) {
-            const positions: Position[] = JSON.parse(localStorage.getItem("Positions") || "[]");
-            const updatedPositions = positions.map(pos =>
-              pos.id === position.id ? { ...pos, status: "accepted" } : pos
-            );
-
-            localStorage.setItem("Positions", JSON.stringify(updatedPositions));
-            window.dispatchEvent(new Event("localPositionsUpdated"));
-
-            message.success("Offer placed successfully!");
-            createNotification(1, `Your offer for Product: ${product.title} has been matched!`);
-            createNotification(2, `A position for your Product: ${product.title} has been matched!`);
-            updateBalance(grandTotal, true);
-          } else {
-            message.success("Offer placed successfully!");
-            createNotification(2, `An offer for your Product: ${product.title} has been created!`);
-            console.log(userId, grandTotal);
-            updateBalance(grandTotal, false);
+          try {
+            if (position) {
+              // Step 1: Update matching position
+              const positions: Position[] = JSON.parse(localStorage.getItem("Positions") || "[]");
+              const updatedPositions = positions.map(pos =>
+                pos.id === position.id ? { ...pos, status: "accepted" } : pos
+              );
+              localStorage.setItem("Positions", JSON.stringify(updatedPositions));
+              window.dispatchEvent(new Event("localPositionsUpdated"));
+        
+              // Step 2: Add new offer
+              const existingOffers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
+              const acceptedOffer: Offer = { ...newOffer, status: 'accepted' };
+              existingOffers.push(acceptedOffer);
+              localStorage.setItem("Offers", JSON.stringify(existingOffers));
+        
+              // Step 3: Notify and update balance
+              message.success("Offer placed successfully!");
+              createNotification(1, `Your offer for Product: ${product.title} has been matched!`);
+              createNotification(2, `A position for your Product: ${product.title} has been matched!`);
+              updateBalance(grandTotal, true);
+            } else {
+              // No position match — just add the offer
+              const existingOffers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
+              existingOffers.push(newOffer);
+              localStorage.setItem("Offers", JSON.stringify(existingOffers));
+        
+              message.success("Offer placed successfully!");
+              createNotification(2, `An offer for your Product: ${product.title} has been created!`);
+              console.log(userId, grandTotal);
+              updateBalance(grandTotal, false);
+            }
+        
+            closeDrawer();
+            form.resetFields();
+          } catch (error) {
+            console.error("Error while placing offer:", error);
+            message.error("Something went wrong while placing the offer.");
           }
-
-          closeDrawer();
-          form.resetFields();
         } else {
           message.error("Not sufficient balance!");
-        }
+        }        
       })
       .catch(errorInfo => {
         console.log("Validation Failed:", errorInfo);
