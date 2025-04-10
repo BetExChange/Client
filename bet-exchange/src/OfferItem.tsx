@@ -31,14 +31,13 @@ const OfferItem: React.FC<OfferItemProps> = ({offer, product, color}) => {
             <AddPositionModal
                 visible={modalOpen}
                 onClose={() => setModalOpen(false)}
-                onAdd={(pos) => {
-                    addPosition(pos);
+                onAdd={(pos, product, offer) => {
+                    addPosition(pos, product, offer);
                     window.dispatchEvent(new Event("localPositionsUpdated"));
                 }}
-                productId={product.id}
+                product={product}
                 sellerId={userId}
-                minPrice={offer.price}
-                pieces={offer.quantity}
+                offer={offer}
             />
       )}
         </>

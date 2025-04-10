@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Product, Position, Offer } from "./Types";
 import { message } from "antd";
+import { useNotificationContext } from "./NotificationContext";
+import { useAuth } from "./AuthProvider";
+
 
 type useProductsAPI = {
   products: Product[];
@@ -11,11 +14,13 @@ type useProductsAPI = {
   getUserPositionedProducts: (userId: number) => Product[];
   getUserPositionsForProduct: (userId: number, productId: number) => Position[];
   deletePosition: (positionId: number) => void;
-  addPosition: (position: Position)  => void;
+  addPosition: (position: Position, offer?: Offer, product?: Product)  => void;
 };
 
 const useProducts = (): useProductsAPI => {
   const [products, setProducts] = useState<Product[]>([]);
+  const { createNotification } = useNotificationContext();
+  const { updateBalance } = useAuth();
 
   const getProducts = () => {
     const storedProducts = localStorage.getItem("Products");
@@ -169,7 +174,10 @@ const useProducts = (): useProductsAPI => {
     try {
       const allPositions: Position[] = JSON.parse(storedPositions);
       return allPositions.filter(
-        (pos) => pos.productId === productId && pos.sellerId === userId
+        (pos) =>
+          pos.productId === productId &&
+          pos.sellerId === userId &&
+          pos.status === "open"
       );
     } catch (error) {
       console.error("Failed to parse positions from localStorage", error);
@@ -194,21 +202,46 @@ const useProducts = (): useProductsAPI => {
     }
   };
   
-  const addPosition = (position: Position) => {
-    const storedPositions = localStorage.getItem("Positions");
+  const addPosition = (position: Position, offer?: Offer, product?: Product) => {
     try {
-      const positions: Position[] = storedPositions ? JSON.parse(storedPositions) : [];
+      if (offer != null) {
+        // Step 1: Validate and update offer
+        const offers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
+        const updatedOffers = offers.map(off =>
+          off.id === offer.id ? { ...off, status: "accepted" } : off
+        );
+        localStorage.setItem("Offers", JSON.stringify(updatedOffers));
   
-      const updatedPositions = [...positions, position];
-      localStorage.setItem("Positions", JSON.stringify(updatedPositions));
+        // Step 2: Retrieve existing positions
+        const storedPositions = localStorage.getItem("Positions");
+        const positions: Position[] = storedPositions ? JSON.parse(storedPositions) : [];
   
-      window.dispatchEvent(new Event("localPositionsUpdated"));
-      message.success("Position added successfully!")
+        // Step 3: Add the new position and mark it as accepted
+        const updatedPositions = [...positions, { ...position, status: "accepted" }];
+        localStorage.setItem("Positions", JSON.stringify(updatedPositions));
+  
+        // Step 4: Notifications and balance
+        window.dispatchEvent(new Event("localPositionsUpdated"));
+        message.success("Position added successfully!");
+        createNotification(1, `Your offer for Product: ${product?.title} has been matched!`);
+        createNotification(2, `Your position for your Product: ${product?.title} has been matched!`);
+        updateBalance(position.minPrice*position.pieces, true);
+  
+      } else {
+        // No offer - simple add
+        const storedPositions = localStorage.getItem("Positions");
+        const positions: Position[] = storedPositions ? JSON.parse(storedPositions) : [];
+        const updatedPositions = [...positions, position];
+        localStorage.setItem("Positions", JSON.stringify(updatedPositions));
+  
+        window.dispatchEvent(new Event("localPositionsUpdated"));
+        message.success("Position added successfully!");
+        updateBalance(position.minPrice*position.pieces, false);
+      }
     } catch (error) {
       console.error("Error adding position:", error);
     }
-  };
-  
+  };  
 
   return { products, getProducts, getPositions, getOffers, getBestPositions, getUserPositionedProducts, getUserPositionsForProduct, deletePosition, addPosition };
 };

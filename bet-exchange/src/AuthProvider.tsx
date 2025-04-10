@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContextType } from "./Types";
+import { AuthContextType, User } from "./Types";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const storedUserRole = localStorage.getItem("AuthUser") as 'buyer' | 'seller' | null;
+  
   const [username, setUsername] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<'buyer' | 'seller' | null>(storedUserRole);
   const [userId, setUserId] = useState<number | null>(null);
@@ -14,13 +15,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const navigate = useNavigate();
 
   useEffect(() => { 
-    if (storedUserRole !== null) {
-      const users = JSON.parse(localStorage.getItem("Users") || "[]");
-      const authenticatedUser = users.find((user: { role: string }) => user.role === storedUserRole);
+    if (storedUserRole) {
+      const users: User[] = JSON.parse(localStorage.getItem("Users") || "[]");
+      const authenticatedUser = users.find((user: User) => user.role === storedUserRole);
       if (authenticatedUser) {
-          setUsername(authenticatedUser.username);
-          setUserId(authenticatedUser.id);
-          setBalance(authenticatedUser.balance);
+        setUsername(authenticatedUser.username);
+        setUserId(authenticatedUser.id);
+        setBalance(authenticatedUser.balance);
       }
     }
   }, [storedUserRole]);
@@ -29,12 +30,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem("AuthUser", role);
     setUserRole(role);
     setIsLoggedIn(true);
-    if (role === 'buyer'){
-        navigate("/buyer");
+    if (role === 'buyer') {
+      navigate("/buyer");
     } else {
-        navigate("/seller");
+      navigate("/seller");
     }
-    
   };
 
   const logout = () => {
@@ -44,26 +44,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate("/login");
   };
 
-  const updateBalance = (userId: number, price: number) => {
-    const users = JSON.parse(localStorage.getItem("Users") || "[]");
-  
-    const updatedUsers = users.map((user: any) => {
-      if (user.id === userId) {
-        const newBalance = user.balance - price;
-        user.balance = newBalance;
-  
-        setBalance(newBalance);
+  const updateBalance = (price: number, isMatched: boolean) => {
+    const users: User[] = JSON.parse(localStorage.getItem("Users") || "[]");
+
+    const updatedUsers = users.map((user: User) => {
+      if (isMatched) {
+        if (user.role === "buyer") {
+          user.balance -= price;
+        } else if (user.role === "seller") {
+          user.balance += price;
+        }
+      } else {
+        if (userRole === "buyer" && user.role === "buyer") {
+          user.balance -= price;
+        }
       }
       return user;
     });
-  
+
     localStorage.setItem("Users", JSON.stringify(updatedUsers));
+
+    const currentUser = updatedUsers.find((user: User) => user.role === userRole);
+    if (currentUser) {
+      setBalance(currentUser.balance);
+    }
   };
-  
-  
 
   return (
-    <AuthContext.Provider value={{ username, userRole, userId, isLoggedIn, balance, login, logout, updateBalance }}>
+    <AuthContext.Provider 
+      value={{ username, userRole, userId, isLoggedIn, balance, login, logout, updateBalance }}
+    >
       {children}
     </AuthContext.Provider>
   );

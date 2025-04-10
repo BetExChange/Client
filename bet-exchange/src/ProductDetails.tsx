@@ -105,7 +105,7 @@ const ProductDetails: React.FC = () => {
             addPosition(pos);
             window.dispatchEvent(new Event("localPositionsUpdated"));
           }}
-          productId={product.id}
+          product={product}
           sellerId={userId}
         />
       )}

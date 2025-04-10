@@ -3,12 +3,13 @@ import { Layout, MenuProps, Avatar, Dropdown, Typography, Badge, Popover, List }
 import { BellOutlined, UserOutlined } from "@ant-design/icons";
 import { useAuth } from "./AuthProvider";
 import { useNotificationContext } from "./NotificationContext";
+import { useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
 const { Title } = Typography;
 
 const Navbar: React.FC = () => {
-  const { logout, username , balance } = useAuth();
+  const { logout, username , balance, userRole } = useAuth();
   const { notifications, unreadCount, markAsRead } = useNotificationContext();
   const [popoverVisible, setPopoverVisible] = useState(false);
 
@@ -24,6 +25,15 @@ const Navbar: React.FC = () => {
     { key: "logout", label: "Logout", onClick: logout },
   ];
 
+  const navigate = useNavigate();
+
+  const handleTitleClick = () => {
+    if (userRole === "buyer") {
+      navigate("/buyer");
+    } else if (userRole === "seller") {
+      navigate("/seller");
+    }
+  };
   return (
     <Header  style={{
         width: "100%",
@@ -40,7 +50,7 @@ const Navbar: React.FC = () => {
       }}>
       
       {/* Title */}
-      <Title level={3} style={{ margin: 0 }}>
+      <Title level={3} style={{ margin: 0, cursor: "pointer"}} onClick={handleTitleClick}>
         {"Bet Exchange"}
       </Title>
 

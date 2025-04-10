@@ -52,21 +52,28 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
           existingOffers.push(newOffer);
           localStorage.setItem("Offers", JSON.stringify(existingOffers));
 
-          message.success("Offer placed successfully!");
-          createNotification(1, `Your offer for Product: ${product.title} has been created!`);
-          createNotification(2, `An offer for your Product: ${product.title} has been created!`);
-          console.log(userId, grandTotal);
-          updateBalance(userId, grandTotal);
-
           if (position) {
             const positions: Position[] = JSON.parse(localStorage.getItem("Positions") || "[]");
             const updatedPositions = positions.map(pos =>
               pos.id === position.id ? { ...pos, status: "accepted" } : pos
             );
+
             localStorage.setItem("Positions", JSON.stringify(updatedPositions));
             window.dispatchEvent(new Event("localPositionsUpdated"));
+
+            message.success("Offer placed successfully!");
+            createNotification(1, `Your offer for Product: ${product.title} has been matched!`);
+            createNotification(2, `A position for your Product: ${product.title} has been matched!`);
+            updateBalance(grandTotal, true);
+          } else {
+            message.success("Offer placed successfully!");
+            createNotification(2, `An offer for your Product: ${product.title} has been created!`);
+            console.log(userId, grandTotal);
+            updateBalance(grandTotal, false);
           }
+
           closeDrawer();
+          form.resetFields();
         } else {
           message.error("Not sufficient balance!");
         }
