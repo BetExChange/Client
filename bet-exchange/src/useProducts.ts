@@ -151,8 +151,10 @@ const useProducts = (): useProductsAPI => {
       const products: Product[] = JSON.parse(storedProducts);
   
       const userPositionedProductIds = new Set(
-        positions
-          .filter((pos) => pos.sellerId === userId)
+        positions.filter(
+          (pos) => 
+            pos.sellerId === userId &&
+            pos.status === "open")
           .map((pos) => pos.productId)
       );
   
