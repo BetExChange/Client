@@ -18,6 +18,9 @@ const ProductDetails: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { addPosition } = useProducts();
   const { userId } = useAuth();
+  const [marketplacePrice] = useState(() => Math.floor(Math.random() * 20) + 1);
+  const [totalInventory] = useState(() => Math.floor(Math.random() * 50) + 1);
+  const [available] = useState(() => Math.floor(Math.random() * 50) + 1);
   const [fromDate, setFromDate] = useState<any>(null);
   const [toDate, setToDate] = useState<any>(null);
   const [exchangeData, setExchangeData] = useState<{
@@ -34,9 +37,9 @@ const ProductDetails: React.FC = () => {
   ];
 
   const prices: DescriptionsProps['items'] = [
-    { key: '1', label: 'Marketplace Price', children: `${Math.floor(Math.random() * 20)} €` },
-    { key: '2', label: 'Total Inventory', children: `${Math.floor(Math.random() * 50)}` },
-    { key: '3', label: 'Available', children: `${Math.floor(Math.random() * 50)}` },
+    { key: '1', label: 'Marketplace Price', children: `${marketplacePrice} €` },
+    { key: '2', label: 'Total Inventory', children: totalInventory },
+    { key: '3', label: 'Available', children: available },
   ];
   
   return (

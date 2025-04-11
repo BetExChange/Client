@@ -1,19 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Table, Button, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import type { ColumnsType } from 'antd/es/table';
 import { Product } from './Types';
 import useProducts from './useProducts';
 
-const SellerTable: React.FC<{ userId: number }> = ({ userId }) => {
-  const { getUserPositionedProducts } = useProducts();
-  const [products, setProducts] = useState<Product[]>([]);
+const SellerTable: React.FC = ({ }) => {
+  const { products } = useProducts();
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    const fetchedProducts = getUserPositionedProducts(userId);
-    setProducts(fetchedProducts);
-  }, [userId]);
   
   const columns: ColumnsType<Product> = [
     {

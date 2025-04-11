@@ -1,8 +1,7 @@
-import { Button, DatePicker, Divider, Form, InputNumber, Select, Typography, message } from "antd";
+import { Button, DatePicker, Divider, Form, InputNumber, Select, Typography } from "antd";
 import { Product, Offer, Position } from "./Types";
 import { useState, useEffect } from "react";
-import { useNotificationContext } from "./NotificationContext";
-import { useAuth } from "./AuthProvider";
+import useProducts from "./useProducts";
 
 const { Text } = Typography;
 
@@ -13,8 +12,7 @@ type OfferFormProps = {
 };
 
 const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position }) => {
-  const { createNotification } = useNotificationContext();
-  const { userId, balance, updateBalance } = useAuth();
+  const { addOffer } = useProducts();
   const [form] = Form.useForm();
   const [unitPrice, setUnitPrice] = useState<number | null>(null);
   const [quantity, setQuantity] = useState<number | null>(null);
@@ -33,68 +31,22 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
   const grandTotal = totalAmount + fee;
 
   const handleSubmit = () => {
-    form.validateFields()
-      .then(values => {
-        const newOffer: Offer = {
-          id: Date.now(),
-          productId: product.id,
-          buyerId: 1,
-          quantity: values.quantity,
-          price: values.unitPrice,
-          duration: values.duration.toDate(),
-          paymentMethod: values.paymentMethod,
-          address: values.location,
-          status: 'open'
-        };
-
-        if (userId !== null && balance !== null && grandTotal <= balance) {
-          try {
-            if (position) {
-              // Step 1: Update matching position
-              const positions: Position[] = JSON.parse(localStorage.getItem("Positions") || "[]");
-              const updatedPositions = positions.map(pos =>
-                pos.id === position.id ? { ...pos, status: "accepted" } : pos
-              );
-              localStorage.setItem("Positions", JSON.stringify(updatedPositions));
-              window.dispatchEvent(new Event("localPositionsUpdated"));
-        
-              // Step 2: Add new offer
-              const existingOffers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
-              const acceptedOffer: Offer = { ...newOffer, status: 'accepted' };
-              existingOffers.push(acceptedOffer);
-              localStorage.setItem("Offers", JSON.stringify(existingOffers));
-        
-              // Step 3: Notify and update balance
-              message.success("Offer placed successfully!");
-              createNotification(1, `Your offer for Product: ${product.title} has been matched!`);
-              createNotification(2, `A position for your Product: ${product.title} has been matched!`);
-              updateBalance(grandTotal, true);
-            } else {
-              // No position match — just add the offer
-              const existingOffers: Offer[] = JSON.parse(localStorage.getItem("Offers") || "[]");
-              existingOffers.push(newOffer);
-              localStorage.setItem("Offers", JSON.stringify(existingOffers));
-        
-              message.success("Offer placed successfully!");
-              createNotification(2, `An offer for your Product: ${product.title} has been created!`);
-              console.log(userId, grandTotal);
-              updateBalance(grandTotal, false);
-            }
-        
-            closeDrawer();
-            form.resetFields();
-          } catch (error) {
-            console.error("Error while placing offer:", error);
-            message.error("Something went wrong while placing the offer.");
-          }
-        } else {
-          message.error("Not sufficient balance!");
-        }        
-      })
-      .catch(errorInfo => {
-        console.log("Validation Failed:", errorInfo);
-      });
-  };
+    form.validateFields().then(values => {
+      const newOffer: Offer = {
+        id: Date.now(),
+        productId: product.id,
+        buyerId: 1,
+        quantity: values.quantity,
+        price: values.unitPrice,
+        duration: values.duration.toDate(),
+        paymentMethod: values.paymentMethod,
+        address: values.location,
+        status: 'open'
+      };
+      addOffer(newOffer, grandTotal, position, product);
+      closeDrawer();
+    })
+  }
 
   return (
     <Form form={form} layout="vertical" style={{ display: "flex", flexDirection: "column", height: "95vh" }}>

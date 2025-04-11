@@ -62,8 +62,8 @@ const useInitializeLocalStorage = () => {
     keysWithSampleData.Products.forEach((product) => {
       for (let i = 1; i <= 6; i++) {
         offers.push({
-          id: offers.length + 1,
-          productId: product.id + 1,
+          id: offers.length,
+          productId: product.id,
           buyerId: 1,
           quantity: Math.floor(Math.random() * 50) + 1,
           price: Math.floor(Math.random() * 30) + 1,
