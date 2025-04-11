@@ -1,6 +1,7 @@
-import { Button, Divider, Form } from "antd";
+import { Button, Col, Divider, Form, Row } from "antd";
 import { Product } from "./Types";
 import PositionList from "./PositionList";
+import OfferList from "./OfferList";
 
 type OverwiewFormProps = {
   product: Product;
@@ -24,8 +25,15 @@ const OverviewForm: React.FC<OverwiewFormProps> = ({product, closeDrawer, openDr
       
       <p>Choose an existing offer or create your own.</p>
       
-      {/* Existing Positions */}
-      <PositionList product={product} openDrawer={openDrawer} closeDrawer={closeDrawer}/>
+      <Row>
+        <Col>
+          {/* Existing Positions */}
+          <PositionList product={product} type="Drawer"/>
+
+          {/* Existing Offers */}
+          <OfferList product={product} onClick={() => openDrawer("offer")} type="Drawer"/>
+        </Col>
+      </Row>
 
       {/* Custom Offer Button */}
       <Button block style={{ backgroundColor: "orange", color: "white", marginBottom:'10px', borderColor: "orange"}} onClick={() => openDrawer("offer")}>Place your offer</Button>

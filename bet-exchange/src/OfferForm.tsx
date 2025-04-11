@@ -1,5 +1,5 @@
 import { Button, DatePicker, Divider, Form, InputNumber, Select, Typography } from "antd";
-import { Product, Offer, Position } from "./Types";
+import { Product, Offer } from "./Types";
 import { useState, useEffect } from "react";
 import useProducts from "./useProducts";
 
@@ -7,23 +7,29 @@ const { Text } = Typography;
 
 type OfferFormProps = {
   product: Product;
-  position?: Position;
+  initialPrice?: number;
+  initialQuantity?: number;
   closeDrawer: () => void;
 };
 
-const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position }) => {
+const OfferForm: React.FC<OfferFormProps> = ({
+  product,
+  initialPrice,
+  initialQuantity,
+  closeDrawer,
+}) => {
   const { addOffer } = useProducts();
   const [form] = Form.useForm();
-  const [unitPrice, setUnitPrice] = useState<number | null>(null);
-  const [quantity, setQuantity] = useState<number | null>(null);
+  const [unitPrice, setUnitPrice] = useState<number | null>(initialPrice || null);
+  const [quantity, setQuantity] = useState<number | null>(initialQuantity || null);
 
   useEffect(() => {
-    if (position) {
-      setUnitPrice(position.minPrice);
-      setQuantity(position.pieces);
-      form.setFieldsValue({ unitPrice: position.minPrice, quantity: position.pieces });
+    if (initialPrice !== undefined && initialQuantity !== undefined) {
+      setUnitPrice(initialPrice);
+      setQuantity(initialQuantity);
+      form.setFieldsValue({ unitPrice: initialPrice, quantity: initialQuantity });
     }
-  }, [position, form]);
+  }, [initialPrice, initialQuantity, form]);
 
   const feePercentage = 0.05;
   const totalAmount = (unitPrice || 0) * (quantity || 0);
@@ -43,10 +49,10 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
         address: values.location,
         status: 'open'
       };
-      addOffer(newOffer, grandTotal, position, product);
+      addOffer(newOffer, grandTotal, undefined, product);
       closeDrawer();
-    })
-  }
+    });
+  };
 
   return (
     <Form form={form} layout="vertical" style={{ display: "flex", flexDirection: "column", height: "95vh" }}>
@@ -56,10 +62,10 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
         src={product.imageUrl}
         alt={product.title}
         style={{ width: "100%", maxWidth: "300px", height: "auto", borderRadius: "10px", marginBottom: "10px" }}
-      /> 
+      />
       <h3 style={{ textAlign: "center" }}>{product.title}</h3>
 
-      <Form.Item label="Unit Price (€):" name="unitPrice" rules={[{ required: true, message: "Please enter a valid price!" }]}>            
+      <Form.Item label="Unit Price (€):" name="unitPrice" rules={[{ required: true, message: "Please enter a valid price!" }]}>
         <InputNumber
           value={unitPrice || undefined}
           min={0}
@@ -69,7 +75,7 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
         />
       </Form.Item>
 
-      <Form.Item label="Quantity:" name="quantity" rules={[{ required: true, message: "Please enter a valid quantity!" }]}>            
+      <Form.Item label="Quantity:" name="quantity" rules={[{ required: true, message: "Please enter a valid quantity!" }]}>
         <InputNumber
           value={quantity || undefined}
           min={1}
@@ -78,7 +84,7 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
         />
       </Form.Item>
 
-      <Form.Item label="Duration Until:" name="duration" rules={[{ required: true, message: "Please select a duration!" }]}>            
+      <Form.Item label="Duration Until:" name="duration" rules={[{ required: true, message: "Please select a duration!" }]}>
         <DatePicker style={{ width: "100%" }} />
       </Form.Item>
 
@@ -92,7 +98,7 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
         <Text strong style={{ fontSize: "16px" }}>Total: {grandTotal.toFixed(2)}€</Text>
       </div>
 
-      <Form.Item label="Payment Method:" name="paymentMethod" rules={[{ required: true, message: "Please select a payment method!" }]}>            
+      <Form.Item label="Payment Method:" name="paymentMethod" rules={[{ required: true, message: "Please select a payment method!" }]}>
         <Select
           showSearch
           placeholder="Select a payment method"
@@ -116,7 +122,7 @@ const OfferForm: React.FC<OfferFormProps> = ({ product, closeDrawer, position })
         />
       </Form.Item>
 
-      <Button type="primary" style={{ backgroundColor: "teal", borderColor: "teal", marginBottom: "10px", padding: '10px'}} onClick={handleSubmit}>
+      <Button type="primary" style={{ backgroundColor: "teal", borderColor: "teal", marginBottom: "10px", padding: '10px' }} onClick={handleSubmit}>
         Place Offer
       </Button>
 

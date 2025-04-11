@@ -1,28 +1,30 @@
-import React, { useEffect } from 'react';
-import { Modal, InputNumber, DatePicker, Form, Button, Divider } from 'antd';
-import { Offer, Position, Product } from './Types';
+import React, { useEffect } from "react";
+import { Modal, InputNumber, DatePicker, Form, Button, Divider } from "antd";
+import { Position, Product } from "./Types";
+import useProducts from "./useProducts";
 
 type AddPositionModalProps = {
   visible: boolean;
   onClose: () => void;
-  onAdd: (position: Position, offer?: Offer, product?: Product) => void;
   product: Product;
   sellerId: number;
-  offer?: Offer;
+  defaultPrice?: number;
+  defaultQuantity?: number;
 };
 
-const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, onAdd, product, sellerId, offer }) => {
+const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, product, sellerId, defaultPrice = 0, defaultQuantity = 1,}) => {
   const [form] = Form.useForm();
+  const { addPosition } = useProducts();
 
   useEffect(() => {
     if (visible) {
       form.setFieldsValue({
-        minPrice: offer?.price ?? 0,
-        pieces: offer?.quantity ?? 1,
+        minPrice: defaultPrice,
+        pieces: defaultQuantity,
         expirationDate: null,
       });
     }
-  }, [visible, offer, form]);
+  }, [visible, defaultPrice, defaultQuantity, form]);
 
   const handleOk = async () => {
     try {
@@ -36,10 +38,11 @@ const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, o
         expirationDate: values.expirationDate.toDate(),
         status: "open",
       };
-      onAdd(newPosition, offer, product);
+      addPosition(newPosition);
       onClose();
       form.resetFields();
     } catch (err) {
+      // Handle validation errors
     }
   };
 
@@ -72,10 +75,7 @@ const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, o
           name="pieces"
           rules={[{ required: true, message: "Please enter quantity" }]}
         >
-          <InputNumber
-            min={1}
-            style={{ width: "50%" }}
-          />
+          <InputNumber min={1} style={{ width: "50%" }} />
         </Form.Item>
 
         <Form.Item

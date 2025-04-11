@@ -6,9 +6,9 @@ import Navbar from './NavBar';
 import { Product } from './Types';
 import PositionTable from './PositionTable';
 import AddPositionModal from './AddPositionModal';
-import useProducts from './useProducts';
 import { useAuth } from './AuthProvider';
 import OfferList from './OfferList';
+import PositionList from './PositionList';
 
 const { Title } = Typography;
 
@@ -16,7 +16,6 @@ const ProductDetails: React.FC = () => {
   const location = useLocation();
   const product: Product = location.state?.product;
   const [modalOpen, setModalOpen] = useState(false);
-  const { addPosition } = useProducts();
   const { userId } = useAuth();
   const [marketplacePrice] = useState(() => Math.floor(Math.random() * 20) + 1);
   const [totalInventory] = useState(() => Math.floor(Math.random() * 50) + 1);
@@ -104,10 +103,6 @@ const ProductDetails: React.FC = () => {
         <AddPositionModal
           visible={modalOpen}
           onClose={() => setModalOpen(false)}
-          onAdd={(pos) => {
-            addPosition(pos);
-            window.dispatchEvent(new Event("localPositionsUpdated"));
-          }}
           product={product}
           sellerId={userId}
         />
@@ -178,7 +173,8 @@ const ProductDetails: React.FC = () => {
     </Row>
 
     <Row>
-      <OfferList product={product}/>
+      <OfferList product={product} type='Modal' onClick={() => setModalOpen(true)}/>
+      <PositionList product={product} type="Modal"/>
     </Row>
     </div>
   );

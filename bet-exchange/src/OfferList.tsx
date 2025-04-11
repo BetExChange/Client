@@ -5,23 +5,39 @@ import OfferItem from "./OfferItem";
 
 type OfferListProps = {
     product: Product;
+    onClick: () => void;
+    type: "Drawer" | "Modal";
 };
 
-const OfferList: React.FC<OfferListProps> = ({ product }) => {
+const OfferList: React.FC<OfferListProps> = ({ product, type }) => {
     const { getOffers } = useProducts();
     const offers = getOffers(product.id).filter((offer) => offer.status === "open");
 
+    const isModal = type === "Modal";
+    const reversedOffers = isModal ? [...offers].reverse() : offers;
+
     return (
         <List
-            grid={{ gutter: 16, xs: 2, sm: 3, md: 4, lg: 4, xl: 6 }}
-            dataSource={offers}
-            renderItem={(offer, index,) => (
-                <List.Item>
-                    <OfferItem offer={offer} product={product} color={index < 3 ? "teal" : "orange"}/>
+            dataSource={reversedOffers}
+            itemLayout="horizontal"
+            renderItem={(offer) => (
+                <List.Item
+                    style={{
+                        display: isModal ? "inline-block" : "block",
+                        justifyContent: "center",
+                        marginRight: "20px",
+                    }}
+                >
+                    <OfferItem
+                        type={type}
+                        offer={offer}
+                        product={product}
+                        color={isModal ? "teal" : "orange"}
+                    />
                 </List.Item>
             )}
             locale={{
-                    emptyText: <Empty description="No offers available for this product." />,
+                emptyText: <Empty description="No offers available for this product." />,
             }}
         />
     );

@@ -48,11 +48,7 @@ const useProducts = (): useProductsAPI => {
         .slice(0, 3)
         .reverse();
   
-      const highestPrices = [...filtered]
-        .sort((a, b) => b.minPrice - a.minPrice)
-        .slice(0, 3);
-  
-      return [...lowestPrices, ...highestPrices];
+      return [...lowestPrices];
     } catch (error) {
       console.error("Failed to parse positions from localStorage", error);
       return [];
@@ -70,13 +66,9 @@ const useProducts = (): useProductsAPI => {
       const highestPrices = [...filtered]
         .sort((a, b) => b.price - a.price)
         .slice(0, 3)
-        .reverse();
+
   
-        const lowestPrices = [...filtered]
-        .sort((a, b) => a.price - b.price)
-        .slice(0, 3)
-  
-      return [...highestPrices, ...lowestPrices];
+      return [...highestPrices];
     } catch (error) {
       console.error("Failed to parse offers from localStorage", error);
       return [];
@@ -346,7 +338,8 @@ const useProducts = (): useProductsAPI => {
     getUserPositionsForProduct, 
     deletePosition, 
     addPosition, 
-    addOffer };
+    addOffer,
+  };
 };
 
 export default useProducts;
