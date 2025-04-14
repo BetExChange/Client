@@ -35,11 +35,13 @@ const OverviewForm: React.FC<OverwiewFormProps> = ({product, closeDrawer, openDr
         </Col>
       </Row>
 
-      {/* Custom Offer Button */}
-      <Button block style={{ backgroundColor: "orange", color: "white", marginBottom:'10px', borderColor: "orange"}} onClick={() => openDrawer("offer")}>Place your offer</Button>
+      <Row style={{width: "100%"}}>
+        {/* Custom Offer Button */}
+        <Button block style={{ backgroundColor: "orange", color: "white", marginBottom:'10px', borderColor: "orange"}} onClick={() => openDrawer("offer")}>Place your offer</Button>
 
-      {/* Cancel Button */}
-      <Button block danger onClick={closeDrawer}>Cancel</Button>
+        {/* Cancel Button */}
+        <Button block danger onClick={closeDrawer}>Cancel</Button>
+      </Row>
     </Form>
   );
 };

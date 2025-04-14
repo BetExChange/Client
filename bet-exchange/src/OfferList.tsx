@@ -20,6 +20,7 @@ const OfferList: React.FC<OfferListProps> = ({ product, type }) => {
         <List
             dataSource={reversedOffers}
             itemLayout="horizontal"
+            split={false}
             renderItem={(offer) => (
                 <List.Item
                     style={{

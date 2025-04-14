@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
     .slice(0, 5);
 
   const menuItems: MenuProps["items"] = [
-    { key: "balance", label: `Balance: ${balance} €` },
+    { key: "balance", label: `Balance: ${balance !== null ? balance.toFixed(2) : 0} €` },
     { key: "addBalance", label: `Add Balance` },
     { key: "logout", label: "Logout", onClick: logout },
   ];

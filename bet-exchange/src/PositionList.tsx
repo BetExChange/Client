@@ -18,7 +18,7 @@ const PositionList: React.FC<PositionListProps> = ({ product, type }) => {
   return (
     <List
       dataSource={reversedPositions}
-      
+      split={false}
       renderItem={(position) => (
         <List.Item
           style={{
