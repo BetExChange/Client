@@ -41,7 +41,7 @@ const useProducts = (): useProductsAPI => {
   
     try {
       const allPositions: Position[] = JSON.parse(storedPositions);
-      const filtered = allPositions.filter((pos) => pos.productId === productId);
+      const filtered = allPositions.filter((pos) => pos.productId === productId && pos.status === "open");
   
       const lowestPrices = [...filtered]
         .sort((a, b) => a.minPrice - b.minPrice)
@@ -61,7 +61,7 @@ const useProducts = (): useProductsAPI => {
 
     try {
       const allOffers: Offer[] = JSON.parse(storedOffers);
-      const filtered = allOffers.filter((offer) => offer.productId === productId);
+      const filtered = allOffers.filter((offer) => offer.productId === productId && offer.status === "open");
 
       const highestPrices = [...filtered]
         .sort((a, b) => b.price - a.price)
