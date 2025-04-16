@@ -6,7 +6,6 @@
 - create NotFoundException
 - create service layer
 - create DTO
-- create modelAssembler
 - create rest controller
 
 ## Entities
@@ -26,7 +25,7 @@ public class Product {
     private String brand;
     private Long barcode;
     private Position bestPricePosition;
-    private Position bestQuantityPosition;
+    private Position * ;
 
     // Getters and setters
     public Long getId() {
