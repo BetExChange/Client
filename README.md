@@ -1,134 +1,126 @@
 # Implementation Plan
 
-- create entities/domain objects
-- create repositories
-- load database / create product entries
-- create NotFoundException
-- create service layer
-- create DTO
-- create rest controller
+- Set up Spring Boot project with dependencies: Web, Spring Data JPA, PostgreSQL Driver, Liquibase
+- Create docker-compose.yml to run PostgreSQL and backend services
+- Configure application.yml with PostgreSQL and Liquibase settings
+- Configure Liquibase:
+    - Create db.changelog-master.xml
+    - Create initial changelog file with table definitions
+- Create entities/domain objects
+- Create repositories
+- Create service layer to handle business logic
+- Create DTOs to structure API requests/responses
+- Create REST controller to expose API endpoints
+- Update React frontend to replace localStorage with REST API calls
+- Test frontend-backend integration (e.g., add/delete/fetch items)
+- Run everything via Docker Compose
 
-## Entities
+## Use Cases
 
-### Product
+### Get a user's notifications
+#### Entities
+
+##### Notification
 ```
 @Entity
-public class Product {
+@Table(name = "notifications")
+public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String imageUrl;
-    private String description;
-    private String brand;
-    private Long barcode;
-    private Position bestPricePosition;
-    private Position * ;
+    private Long userId;
+
+    private String message;
+
+    private LocalDateTime timestamp;
+
+    private boolean read;
+
+    // Constructors
+    public Notification() {}
+
+    public Notification(Long userId, String message, LocalDateTime timestamp, boolean read) {
+        this.userId = userId;
+        this.message = message;
+        this.timestamp = timestamp;
+        this.read = read;
+    }
 
     // Getters and setters
-    public Long getId() {
-        return id;
-    }
+    // ...
+}
+```
+#### DTOs
+##### Notification DTO
+```
+public class NotificationDTO {
+    private Long id;
+    private Long userId;
+    private String message;
+    private LocalDateTime timestamp;
+    private boolean read;
 
-    public void setId(Long id) {
+    public NotificationDTO() {}
+
+    public NotificationDTO(Long id, Long userId, String message, LocalDateTime timestamp, boolean read) {
         this.id = id;
+        this.userId = userId;
+        this.message = message;
+        this.timestamp = timestamp;
+        this.read = read;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public Long getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(Long barcode) {
-        this.barcode = barcode;
-    }
-
-    public Position getBestPricePosition() {
-        return bestPricePosition;
-    }
-
-    public void setBestPricePosition(Position bestPricePosition) {
-        this.bestPricePosition = bestPricePosition;
-    }
-
-    public Position getBestQuantityPosition() {
-        return bestQuantityPosition;
-    }
-
-    public void setBestQuantityPosition(Position bestQuantityPosition) {
-        this.bestQuantityPosition = bestQuantityPosition;
-    }
+    // Getters and setters
+    // ...
 }
 ```
 
-## Repositories
+#### Repositories
 
-### Product Repository
+##### Notification Repository
 ```
-public interface ProductRepository extends JpaRepository<Product, Long> {}
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
+    List<Notification> findByUserId(Long userId);
+}
 ```
 
-## Services
+#### Services
 
-### Product Services
+##### Notification Services
 ```
 @Service
-public class ProductService {
+public class NotificationService {
+
     @Autowired
-    private ProductRepository productRepository;
+    private NotificationRepository notificationRepository;
 
-    public List<Product> getAll() { return productRepository.findAll(); }
-
-    public Product getById(Long id) { return productRepository.findById(id).orElseThrow(); }
-
-    public Product create(Product product) { return productRepository.save(product); }
-
-    public Product update(Long id, Product updated) {
-        Product existing = getById(id);
-        // set updated fields
-        return productRepository.save(existing);
-    }
-
-    public void delete(Long id) { productRepository.deleteById(id); }
 }
 ```
 
-## Rest Controller
+#### Rest Controller
 
-### Product Rest Controller
+##### Notification REST Controller
+```
+@RestController
+@RequestMapping("/api/notifications")
+public class NotificationController {
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @GetMapping("/user/{userId}")
+    
+
+    @PostMapping
+    
+
+    @PutMapping("/{id}/read")
+    
+}
 ```
 
-```
+### Create a new notification
+
+### Mark a notification as read
