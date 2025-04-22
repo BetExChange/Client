@@ -61,8 +61,7 @@ Page<NotificationDTO> getNotifications(Long userId, Optional<Boolean> readFilter
 ### 2. Create a New Notification
 
 #### Requirements
-- Allow backend or system process to add a notification for a user
-- Validate required fields (`userId`, `message`)
+- Allow the creation of a notification for a user
 
 #### Entities
 
@@ -96,7 +95,6 @@ NotificationDTO createNotification(CreateNotificationDTO dto);
 
 #### Requirements
 - Allow a user to mark a specific notification as read
-- Ensure only the owner of the notification can update its status
 
 #### Entities
 
