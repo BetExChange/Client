@@ -1,80 +1,104 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Notification } from "./Types";
+import React, { createContext, useContext } from "react";
 import { useAuth } from "./AuthProvider";
+import { useQuery,useMutation,useQueryClient} from "@tanstack/react-query";
+import { Notification } from "./Types";
 
 type NotificationContextType = {
   notifications: Notification[];
   unreadCount: number;
-  markAsRead: (id: number) => void;
-  createNotification: (userId: number, message: string) => void;
+  isLoading: boolean;
+  isError: boolean;
+  markAsRead: (id: number) => Promise<void>;
+  createNotification: (userId: number, message: string) => Promise<void>;
 };
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
-export const NotificationProvider: React.FC<{  children: React.ReactNode }> = ({ children }) => {
-  const {userRole} = useAuth();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+const fetchNotifications = async (userId: number) => {
+  const res = await fetch(
+    `http://localhost:8080/api/users/${userId}/notifications`,
+  );
+  if (!res.ok) {
+    throw new Error("Failed to fetch notifications");
+  }
+  const { content } = await res.json();
+  return content as Notification[];
+};
 
-  const loadNotifications = () => {
-    
-    const users = JSON.parse(localStorage.getItem("Users") || "[]");
+export const NotificationProvider: React.FC<{children: React.ReactNode;}> = ({ children }) => {
+  const { userId } = useAuth();
+  const queryClient = useQueryClient();
 
-    if (userRole) {
-      const user = users.find((u: { id: number, role: string }) => u.role === userRole);
+    // 1. QUERY: fetch notifications
+    const {
+        data: notifications = [],
+        isLoading,
+        isError,
+    } = useQuery<Notification[], Error>({
+        queryKey: ["notifications", userId],
+        queryFn: () => fetchNotifications(userId!),
+        enabled: !!userId,
+    });
 
-      if (user) {
-        const allNotifications = JSON.parse(localStorage.getItem("Notifications") || "[]");
-        const userNotifications = allNotifications.filter((n: Notification) => n.userId === user.id);
-        setNotifications(userNotifications);
-      } else {
-        console.warn("No matching user found for role:", userRole);
-      }
-    }
-  };
 
-  useEffect(() => {
-    loadNotifications();
-    window.addEventListener("local-storage-update", loadNotifications);
-    return () => {
-      window.removeEventListener("local-storage-update", loadNotifications);
-    };
-  }, [userRole]);
+    // 2. MUTATION: mark as read
+    const markAsReadMutation = useMutation< void, Error, number >({
+      mutationFn: async (notificationId) => {
+        const res = await fetch(
+            `http://localhost:8080/api/notifications/${notificationId}/read`,
+          { 
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({notificationId}),
+          }
+        );
+        if (!res.ok) {
+          throw new Error("Could not mark as read");
+        }
+      },
+  
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["notifications", userId],
+        });
+      },
+    });
 
-  const markAsRead = (notificationId: number) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
-    );
+    // 3. MUTATION: create
+    const createNotificationMutation = useMutation< void, Error, { userId: number; message: string } >({
+      mutationFn: async ({ userId, message }) => {
+        const res = await fetch(
+          `http://localhost:8080/api/notifications`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, message }),
+          }
+        );
+        if (!res.ok) {
+          throw new Error("Could not create notification");
+        }
+      },
+      
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["notifications", userId] });
+      },
+    });
 
-    const allNotifications: Notification[] = JSON.parse(localStorage.getItem("Notifications") || "[]");
-    const updated = allNotifications.map((n) =>
-      n.id === notificationId ? { ...n, read: true } : n
-    );
 
-    localStorage.setItem("Notifications", JSON.stringify(updated));
-    window.dispatchEvent(new Event("local-storage-update"));
-  };
+  const markAsRead = (id: number) =>
+    markAsReadMutation.mutateAsync(id);
 
-  const createNotification = (userId: number, message: string) => {
-    const allNotifications: Notification[] = JSON.parse(localStorage.getItem("Notifications") || "[]");
-
-    const newNotification: Notification = {
-      id: allNotifications.length > 0 ? allNotifications[allNotifications.length - 1].id + 1 : 1,
-      userId,
-      message,
-      timestamp: new Date(),
-      read: false,
-    };
-
-    const updated = [...allNotifications, newNotification];
-    localStorage.setItem("Notifications", JSON.stringify(updated));
-    window.dispatchEvent(new Event("local-storage-update"));
-  };
+  const createNotification = (userId: number, message: string) =>
+    createNotificationMutation.mutateAsync({ userId: userId!, message });
 
   return (
     <NotificationContext.Provider
       value={{
         notifications,
         unreadCount: notifications.filter((n) => !n.read).length,
+        isLoading,
+        isError,
         markAsRead,
         createNotification,
       }}
@@ -85,7 +109,10 @@ export const NotificationProvider: React.FC<{  children: React.ReactNode }> = ({
 };
 
 export const useNotificationContext = () => {
-  const context = useContext(NotificationContext);
-  if (!context) throw new Error("useNotificationContext must be used within a NotificationProvider");
-  return context;
+  const ctx = useContext(NotificationContext);
+  if (!ctx)
+    throw new Error(
+      "useNotificationContext must be inside NotificationProvider"
+    );
+  return ctx;
 };

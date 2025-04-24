@@ -7,36 +7,40 @@ import BuyerPage from "./BuyerPage";
 import SellerPage from "./SellerPage";
 import { NotificationProvider } from "./NotificationContext";
 import ProductDetails from "./ProductDetails";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function App() {
   useInitializeLocalStorage();
+  const queryClient = new QueryClient();
 
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <NotificationProvider>
-          <Routes>
-            {/* Public Route */}
-            <Route path="/login" element={<LoginForm />} />
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <NotificationProvider>
+            <Routes>
+              {/* Public Route */}
+              <Route path="/login" element={<LoginForm />} />
 
-            {/* Protected Routes */}
-            <Route element={<PrivateRoute allowedRole="buyer" />}>
-              <Route path="/buyer" element={<BuyerPage />} />
-            </Route>
+              {/* Protected Routes */}
+              <Route element={<PrivateRoute allowedRole="buyer" />}>
+                <Route path="/buyer" element={<BuyerPage />} />
+              </Route>
 
-            <Route element={<PrivateRoute allowedRole="seller" />}>
-              <Route path="/seller" element={<SellerPage />} />
-            </Route>
+              <Route element={<PrivateRoute allowedRole="seller" />}>
+                <Route path="/seller" element={<SellerPage />} />
+              </Route>
 
-            <Route element={<PrivateRoute allowedRole="seller" />}>
-              <Route path="/product/:id" element={<ProductDetails />} />
-            </Route>
+              <Route element={<PrivateRoute allowedRole="seller" />}>
+                <Route path="/product/:id" element={<ProductDetails />} />
+              </Route>
 
-            {/* Redirect unhandled routes */}
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        </NotificationProvider>
-      </AuthProvider>
+              {/* Redirect unhandled routes */}
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          </NotificationProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 }
