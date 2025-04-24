@@ -56,7 +56,7 @@ public class NotificationService {
                 n.getId(),
                 n.getUserId(),
                 n.getMessage(),
-                n.getTimestamp().toString(),
+                n.getTimestamp(),
                 n.isRead()
         );
     }

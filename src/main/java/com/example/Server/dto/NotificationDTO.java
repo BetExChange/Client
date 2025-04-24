@@ -20,9 +20,6 @@ public class NotificationDTO {
         this.read = read;
     }
 
-    public NotificationDTO(Long id, Long userId, String message, String string, boolean read) {
-    }
-
     // Getters and setters
 
     public Long getId() {
