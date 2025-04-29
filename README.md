@@ -233,13 +233,13 @@ BestPositionsDTO getBestPositions(Long productId);
 
 #### Service
 ```java
-List<PositionDTO> getUserPositionsForProduct(Long userId, Long productId);
+Page<PositionDTO> getUserPositionsForProduct(Long userId, Long productId, Pageable pageable);
 ```
 
 #### Endpoint
 | Method | Endpoint                                                   | Request Params | Response                | Status  |
 | ------ | ---------------------------------------------------------- | -------------- | ----------------------- | ------- |
-| GET    | `/api/users/{userId}/products/{productId}/positions`       | —              | `List<PositionDTO>`     | 200 OK  |
+| GET    | `/api/users/{userId}/products/{productId}/positions`       | —              | `Page<PositionDTO>`     | 200 OK  |
 
 ---
 
