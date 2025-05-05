@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-products-table
+      author: author
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: barcode
+                  type: BIGINT
+              - column:
+                  name: brand
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: TEXT
+        - addAutoIncrement:
+            columnDataType: BIGINT
+            columnName: id
+            defaultOnNull: false
+            generationType: ALWAYS
+            incrementBy: 1
+            startWith: 4
+            tableName: products
+
+  - changeSet:
+      id: insert-products
+      author: author
+      changes:
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: id, valueNumeric: 1 }
+              - column: { name: title, value: "Product A" }
+              - column: { name: image_url, value: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" }
+              - column: { name: barcode, valueNumeric: 534662326 }
+              - column: { name: brand, value: "Brand 1" }
+              - column: { name: description, value: "Description of the product." }
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: id, valueNumeric: 2 }
+              - column: { name: title, value: "Product B" }
+              - column: { name: image_url, value: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" }
+              - column: { name: barcode, valueNumeric: 123454545 }
+              - column: { name: brand, value: "Brand 2" }
+              - column: { name: description, value: "Description of the product." }
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: id, valueNumeric: 3 }
+              - column: { name: title, value: "Product C" }
+              - column: { name: image_url, value: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" }
+              - column: { name: barcode, valueNumeric: 563458985 }
+              - column: { name: brand, value: "Brand 3" }
+              - column: { name: description, value: "Description of the product." }
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: id, valueNumeric: 4 }
+              - column: { name: title, value: "Product D" }
+              - column: { name: image_url, value: "https://img.freepik.com/premium-psd/premium-quality-mockup-ready-use_53876-57715.jpg?w=996" }
+              - column: { name: barcode, valueNumeric: 325994746 }
+              - column: { name: brand, value: "Brand 4" }
+              - column: { name: description, value: "Description of the product." }
