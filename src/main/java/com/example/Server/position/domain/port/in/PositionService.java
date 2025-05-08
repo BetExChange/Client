@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface PositionService {
-    Position createPosition(Long productId, Long sellerId, int pieces, BigDecimal minPrice, ZonedDateTime expirationDate);
+    Position createPosition(Long productId, Long sellerId, int pieces, BigDecimal minPrice, ZonedDateTime expirationDate, Long offerId, String productTitle);
     List<Position> getPositionsByProductAndStatus(Long productId, @Nullable String statusFilter);
     List<Position> getPositionsByUserAndProduct(Long userId, Long productId);
     BestPositions getBestOpenPositions(Long productId);

@@ -8,6 +8,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface OfferService {
-    Offer createOffer(Long productId, Long buyerId, BigDecimal price, Integer quantity, ZonedDateTime duration, String paymentMethod, String address);
+    Offer createOffer(Long productId, Long buyerId, BigDecimal price, Integer quantity, ZonedDateTime duration, String paymentMethod, String address, Long positionId, String productTitle);
     List<Offer> getOffersByProductAndStatus(Long productId, @Nullable String statusFilter);
 }

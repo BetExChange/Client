@@ -38,7 +38,8 @@ public class PositionController {
 
         Position created = positionService.createPosition(
                 req.getProductId(), req.getSellerId(), req.getPieces(),
-                req.getMinPrice(), req.getExpirationDate()
+                req.getMinPrice(), req.getExpirationDate(), req.getOfferId(),
+                req.getProductTitle()
         );
 
         PositionDTO dto = toDto(created);

@@ -36,7 +36,7 @@ public class OfferController {
         Offer created = offerService.createOffer(
                 req.getProductId(), req.getBuyerId(), req.getPrice(),
                 req.getQuantity(), req.getDuration(), req.getPaymentMethod(),
-                req.getAddress()
+                req.getAddress(), req.getPositionId(), req.getProductTitle()
         );
 
         OfferDTO dto = toDto(created);

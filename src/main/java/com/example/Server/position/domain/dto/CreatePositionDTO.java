@@ -1,5 +1,7 @@
 package com.example.Server.position.domain.dto;
 
+import com.example.Server.product.model.Product;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -9,6 +11,8 @@ public class CreatePositionDTO {
     private Integer pieces;
     private BigDecimal minPrice;
     private ZonedDateTime expirationDate;
+    private Long offerId;
+    private String productTitle;
 
     public CreatePositionDTO() {}
 
@@ -27,5 +31,21 @@ public class CreatePositionDTO {
     public ZonedDateTime getExpirationDate() { return expirationDate; }
     public void setExpirationDate(ZonedDateTime expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    public Long getOfferId() {
+        return offerId;
+    }
+
+    public void setOfferId(Long offerId) {
+        this.offerId = offerId;
+    }
+
+    public String getProductTitle() {
+        return productTitle;
+    }
+
+    public void setProductTitle(String productTitle) {
+        this.productTitle = productTitle;
     }
 }

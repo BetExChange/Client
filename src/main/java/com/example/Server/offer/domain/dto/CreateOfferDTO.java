@@ -11,6 +11,8 @@ public class CreateOfferDTO {
     private ZonedDateTime duration;
     private String paymentMethod;
     private String address;
+    private Long positionId;
+    private String productTitle;
 
     public CreateOfferDTO() {}
 
@@ -68,5 +70,21 @@ public class CreateOfferDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Long getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(Long positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getProductTitle() {
+        return productTitle;
+    }
+
+    public void setProductTitle(String productTitle) {
+        this.productTitle = productTitle;
     }
 }
