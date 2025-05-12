@@ -3,17 +3,18 @@ import { Table, Button, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import { Position, Product } from './Types';
-import useProducts from './useProducts';
 import { useAuth } from './AuthProvider';
+import { useUserPositionsForProduct } from './useUserPositionsForProduct';
+import { useDeletePosition } from './useDeletePosition';
 
 type PositionTableProps = {
   product: Product;
 }
 
 const PositionTable: React.FC<PositionTableProps> = ({product}) => {
-  const { getUserPositionsForProduct, deletePosition } = useProducts();
   const { userId } = useAuth();
-  const positions: Position[] = userId? getUserPositionsForProduct(userId, product.id) : [];
+  const { data: positions = [] } = useUserPositionsForProduct(userId!, product.id);
+  const { mutate: deletePosition } = useDeletePosition();
 
   const columns: ColumnsType<Position> = [
     {

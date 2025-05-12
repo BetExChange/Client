@@ -61,5 +61,37 @@ export type AuthContextType = {
     isLoggedIn: boolean;
     login: (role: 'buyer' | 'seller') => void;
     logout: () => void;
-    updateBalance: (price: number, isMatched: boolean) => void;
 };
+
+export type Balance = {
+    userId: number;
+    userBalance: number;
+}
+
+export type BestPositionsDTO = {
+    bestPricePosition: Position | null;
+    bestQuantityPosition: Position | null;
+};
+
+export type CreatePositionDTO = {
+    productId: number;
+    sellerId: number | null;
+    pieces: number;
+    minPrice: number;
+    expirationDate: Date;
+    offerId?: number;
+    productTitle?: string;
+}
+
+export type CreateOfferDTO = {
+    productId: number;
+    buyerId: number | null;
+    quantity: number;
+    price: number;
+    duration: Date;
+    paymentMethod: string;
+    address: string;
+    positionId?: number;
+    productTitle?: string;
+  };
+  

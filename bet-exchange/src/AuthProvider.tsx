@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContextType, User } from "./Types";
+import { AuthContextType, Balance, User } from "./Types"
+import { useQuery } from "@tanstack/react-query";;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -11,7 +12,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userRole, setUserRole] = useState<'buyer' | 'seller' | null>(storedUserRole);
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!storedUserRole);
-  const [balance, setBalance] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => { 
@@ -21,7 +21,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (authenticatedUser) {
         setUsername(authenticatedUser.username);
         setUserId(authenticatedUser.id);
-        setBalance(authenticatedUser.balance);
       }
     }
   }, [storedUserRole]);
@@ -44,35 +43,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate("/login");
   };
 
-  const updateBalance = (price: number, isMatched: boolean) => {
-    const users: User[] = JSON.parse(localStorage.getItem("Users") || "[]");
-
-    const updatedUsers = users.map((user: User) => {
-      if (isMatched) {
-        if (user.role === "buyer") {
-          user.balance -= price;
-        } else if (user.role === "seller") {
-          user.balance += price;
-        }
-      } else {
-        if (userRole === "buyer" && user.role === "buyer") {
-          user.balance -= price;
-        }
-      }
-      return user;
-    });
-
-    localStorage.setItem("Users", JSON.stringify(updatedUsers));
-
-    const currentUser = updatedUsers.find((user: User) => user.role === userRole);
-    if (currentUser) {
-      setBalance(currentUser.balance);
+  const fetchBalance = async (): Promise<number> => {
+    const res = await fetch(`http://localhost:8080/api/balance/${userId}`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch user balance (${res.status})`);
     }
+    const data: Balance = await res.json();
+    return data.userBalance;
   };
+
+  const { data: balance = null } = useQuery<number, Error>({
+    queryKey: ["balance", userId],
+    queryFn: fetchBalance,
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <AuthContext.Provider 
-      value={{ username, userRole, userId, isLoggedIn, balance, login, logout, updateBalance }}
+      value={{ username, userRole, userId, isLoggedIn, balance, login, logout }}
     >
       {children}
     </AuthContext.Provider>

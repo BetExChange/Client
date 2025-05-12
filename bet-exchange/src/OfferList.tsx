@@ -1,7 +1,7 @@
 import { List, Empty } from "antd";
-import useProducts from "./useProducts";
 import { Product } from "./Types";
 import OfferItem from "./OfferItem";
+import { useProductOffers } from "./useProductOffers";
 
 type OfferListProps = {
     product: Product;
@@ -10,8 +10,7 @@ type OfferListProps = {
 };
 
 const OfferList: React.FC<OfferListProps> = ({ product, type }) => {
-    const { getOffers } = useProducts();
-    const offers = getOffers(product.id).filter((offer) => offer.status === "open");
+   const { data: offers = [] } = useProductOffers(product.id);
 
     const isModal = type === "Modal";
     const reversedOffers = isModal ? [...offers].reverse() : offers;

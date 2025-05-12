@@ -1,7 +1,8 @@
 import { Button, DatePicker, Divider, Form, InputNumber, Select, Typography } from "antd";
-import { Product, Offer } from "./Types";
+import { Product, CreateOfferDTO } from "./Types";
 import { useState, useEffect } from "react";
-import useProducts from "./useProducts";
+import { useAddOffer } from "./useAddOffer";
+import { useAuth } from "./AuthProvider";
 
 const { Text, Title } = Typography;
 
@@ -18,7 +19,8 @@ const OfferForm: React.FC<OfferFormProps> = ({
   initialQuantity,
   closeDrawer,
 }) => {
-  const { addOffer } = useProducts();
+  const { mutate: addOffer } = useAddOffer();
+  const { userId } = useAuth();
   const [form] = Form.useForm();
   const [unitPrice, setUnitPrice] = useState<number | null>(initialPrice || null);
   const [quantity, setQuantity] = useState<number | null>(initialQuantity || null);
@@ -38,18 +40,17 @@ const OfferForm: React.FC<OfferFormProps> = ({
 
   const handleSubmit = () => {
     form.validateFields().then(values => {
-      const newOffer: Offer = {
-        id: Date.now(),
+      const newOffer: CreateOfferDTO = {
         productId: product.id,
-        buyerId: 1,
+        buyerId: userId,
         quantity: values.quantity,
         price: values.unitPrice,
-        duration: values.duration.toDate(),
+        duration: values.duration.endOf("day").toDate(),
         paymentMethod: values.paymentMethod,
         address: values.location,
-        status: 'open'
+        productTitle: product.title
       };
-      addOffer(newOffer, grandTotal, undefined, product);
+      addOffer(newOffer);
       closeDrawer();
     });
   };

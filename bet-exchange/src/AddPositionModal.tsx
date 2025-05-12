@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Modal, InputNumber, DatePicker, Form, Button, Divider } from "antd";
-import { Position, Product } from "./Types";
-import useProducts from "./useProducts";
+import { CreatePositionDTO, Product } from "./Types";
+import { useAddPosition } from "./useAddPosition";
 
 type AddPositionModalProps = {
   visible: boolean;
@@ -14,7 +14,7 @@ type AddPositionModalProps = {
 
 const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, product, sellerId, defaultPrice = 0, defaultQuantity = 1,}) => {
   const [form] = Form.useForm();
-  const { addPosition } = useProducts();
+  const { mutate: addPosition } = useAddPosition();
 
   useEffect(() => {
     if (visible) {
@@ -29,14 +29,13 @@ const AddPositionModal: React.FC<AddPositionModalProps> = ({ visible, onClose, p
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      const newPosition: Position = {
-        id: Math.floor(Math.random() * 20) + 1,
+      const newPosition: CreatePositionDTO = {
         productId: product.id,
         sellerId,
         minPrice: values.minPrice,
         pieces: values.pieces,
-        expirationDate: values.expirationDate.toDate(),
-        status: "open",
+        expirationDate: values.expirationDate.endOf("day").toDate(),
+        productTitle: product.title
       };
       addPosition(newPosition);
       onClose();

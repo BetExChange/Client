@@ -1,6 +1,6 @@
 import { List } from "antd";
 import PositionItem from "./PositionItem";
-import useProducts from "./useProducts";
+import { useProductPositions } from "./useProductPositions";
 import { Product } from "./Types";
 
 type PositionListProps = {
@@ -9,8 +9,7 @@ type PositionListProps = {
 };
 
 const PositionList: React.FC<PositionListProps> = ({ product, type }) => {
-  const { getPositions } = useProducts();
-  const positions = getPositions(product.id).filter(position => position.status === "open");
+  const { data: positions = [] } = useProductPositions(product.id);
 
   const isModal = type === "Modal";
   const reversedPositions = isModal ? [...positions].reverse() : positions;
