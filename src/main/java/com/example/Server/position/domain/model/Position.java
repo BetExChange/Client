@@ -2,7 +2,7 @@ package com.example.Server.position.domain.model;
 
 import com.example.Server.offer.domain.model.Status;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 public class Position {
     private Long id;
@@ -26,8 +26,16 @@ public class Position {
     }
 
     public boolean isOpen() {
+        ZoneId zone = ZoneId.systemDefault();
+
+        LocalDateTime endOfToday = LocalDate
+                .now(zone)
+                .minusDays(1)
+                .atTime(LocalTime.MAX);
+        ZonedDateTime todayEndOfDay = endOfToday.atZone(zone);
+
         return status == Status.OPEN
-                && expirationDate.isAfter(ZonedDateTime.now());
+                && !expirationDate.isBefore(todayEndOfDay);
     }
 
     public void ensureDeletable() {

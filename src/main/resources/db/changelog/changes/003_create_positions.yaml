@@ -73,7 +73,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 23 }
               - column: { name: min_price,     valueNumeric: 3.20 }
-              - column: { name: expiration_date, value: '2025-05-04T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-04T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -83,7 +83,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 89 }
               - column: { name: min_price,     valueNumeric: 9.10 }
-              - column: { name: expiration_date, value: '2025-05-05T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-05T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -93,7 +93,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 15 }
               - column: { name: min_price,     valueNumeric: 2.75 }
-              - column: { name: expiration_date, value: '2025-05-06T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-06T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -103,7 +103,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 68 }
               - column: { name: min_price,     valueNumeric: 5.00 }
-              - column: { name: expiration_date, value: '2025-05-07T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-07T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -113,7 +113,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 34 }
               - column: { name: min_price,     valueNumeric: 1.25 }
-              - column: { name: expiration_date, value: '2025-05-08T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-08T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
 
         # Product 2 positions
@@ -125,7 +125,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 41 }
               - column: { name: min_price,     valueNumeric: 4.40 }
-              - column: { name: expiration_date, value: '2025-05-03T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-03T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -135,7 +135,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 77 }
               - column: { name: min_price,     valueNumeric: 8.90 }
-              - column: { name: expiration_date, value: '2025-05-04T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-04T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -145,7 +145,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 58 }
               - column: { name: min_price,     valueNumeric: 6.30 }
-              - column: { name: expiration_date, value: '2025-05-05T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-05T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -155,7 +155,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 12 }
               - column: { name: min_price,     valueNumeric: 1.75 }
-              - column: { name: expiration_date, value: '2025-05-06T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-06T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -165,7 +165,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 95 }
               - column: { name: min_price,     valueNumeric: 9.99 }
-              - column: { name: expiration_date, value: '2025-05-07T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-07T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -175,71 +175,8 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 29 }
               - column: { name: min_price,     valueNumeric: 2.20 }
-              - column: { name: expiration_date, value: '2025-05-08T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-08T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
-
-        # Product 3 positions
-        - insert:
-            tableName: positions
-            columns:
-              - column: { name: id,            valueNumeric: 13 }
-              - column: { name: product_id,    valueNumeric: 3  }
-              - column: { name: seller_id,     valueNumeric: 2  }
-              - column: { name: pieces,        valueNumeric: 66 }
-              - column: { name: min_price,     valueNumeric: 3.30 }
-              - column: { name: expiration_date, value: '2025-05-03T00:00:00Z' }
-              - column: { name: status,        value: "OPEN" }
-        - insert:
-            tableName: positions
-            columns:
-              - column: { name: id,            valueNumeric: 14 }
-              - column: { name: product_id,    valueNumeric: 3  }
-              - column: { name: seller_id,     valueNumeric: 2  }
-              - column: { name: pieces,        valueNumeric: 44 }
-              - column: { name: min_price,     valueNumeric: 5.50 }
-              - column: { name: expiration_date, value: '2025-05-04T00:00:00Z' }
-              - column: { name: status,        value: "OPEN" }
-        - insert:
-            tableName: positions
-            columns:
-              - column: { name: id,            valueNumeric: 15 }
-              - column: { name: product_id,    valueNumeric: 3  }
-              - column: { name: seller_id,     valueNumeric: 2  }
-              - column: { name: pieces,        valueNumeric: 78 }
-              - column: { name: min_price,     valueNumeric: 7.25 }
-              - column: { name: expiration_date, value: '2025-05-05T00:00:00Z' }
-              - column: { name: status,        value: "OPEN" }
-        - insert:
-            tableName: positions
-            columns:
-              - column: { name: id,            valueNumeric: 16 }
-              - column: { name: product_id,    valueNumeric: 3  }
-              - column: { name: seller_id,     valueNumeric: 2  }
-              - column: { name: pieces,        valueNumeric: 21 }
-              - column: { name: min_price,     valueNumeric: 2.10 }
-              - column: { name: expiration_date, value: '2025-05-06T00:00:00Z' }
-              - column: { name: status,        value: "OPEN" }
-        - insert:
-            tableName: positions
-            columns:
-              - column: { name: id,            valueNumeric: 17 }
-              - column: { name: product_id,    valueNumeric: 3  }
-              - column: { name: seller_id,     valueNumeric: 2  }
-              - column: { name: pieces,        valueNumeric: 93 }
-              - column: { name: min_price,     valueNumeric: 9.45 }
-              - column: { name: expiration_date, value: '2025-05-07T00:00:00Z' }
-              - column: { name: status,        value: "OPEN" }
-        - insert:
-            tableName: positions
-            columns:
-              - column: { name: id,            valueNumeric: 18 }
-              - column: { name: product_id,    valueNumeric: 3  }
-              - column: { name: seller_id,     valueNumeric: 2  }
-              - column: { name: pieces,        valueNumeric: 37 }
-              - column: { name: min_price,     valueNumeric: 4.80 }
-              - column: { name: expiration_date, value: '2025-05-08T00:00:00Z' }
-              - column: { name: status,        value: "OPEN" }
-
         # Product 4 positions
         - insert:
             tableName: positions
@@ -249,7 +186,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 52 }
               - column: { name: min_price,     valueNumeric: 6.75 }
-              - column: { name: expiration_date, value: '2025-05-03T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-03T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -259,7 +196,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 30 }
               - column: { name: min_price,     valueNumeric: 3.15 }
-              - column: { name: expiration_date, value: '2025-05-04T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-04T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -269,7 +206,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 87 }
               - column: { name: min_price,     valueNumeric: 8.25 }
-              - column: { name: expiration_date, value: '2025-05-05T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-05T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -279,7 +216,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 17 }
               - column: { name: min_price,     valueNumeric: 1.95 }
-              - column: { name: expiration_date, value: '2025-05-06T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-06T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -289,7 +226,7 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 99 }
               - column: { name: min_price,     valueNumeric: 9.99 }
-              - column: { name: expiration_date, value: '2025-05-07T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-07T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }
         - insert:
             tableName: positions
@@ -299,5 +236,5 @@ databaseChangeLog:
               - column: { name: seller_id,     valueNumeric: 2  }
               - column: { name: pieces,        valueNumeric: 47 }
               - column: { name: min_price,     valueNumeric: 5.60 }
-              - column: { name: expiration_date, value: '2025-05-08T00:00:00Z' }
+              - column: { name: expiration_date, value: '2025-12-08T00:00:00Z' }
               - column: { name: status,        value: "OPEN" }

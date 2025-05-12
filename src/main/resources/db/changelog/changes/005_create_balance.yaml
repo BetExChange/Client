@@ -11,7 +11,7 @@ databaseChangeLog:
                   type: BIGINT
               - column:
                   name: user_balance
-                  type: BIGINT
+                  type: NUMERIC(38,2)
                   constraints:
                     nullable: false
         - addAutoIncrement:

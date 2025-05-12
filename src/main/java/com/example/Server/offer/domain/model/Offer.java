@@ -1,7 +1,7 @@
 package com.example.Server.offer.domain.model;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 public class Offer {
     private Long id;
@@ -30,8 +30,16 @@ public class Offer {
     }
 
     public boolean isOpen() {
+        ZoneId zone = ZoneId.systemDefault();
+
+        LocalDateTime endOfToday = LocalDate
+                .now(zone)
+                .minusDays(1)
+                .atTime(LocalTime.MAX);
+        ZonedDateTime todayEndOfDay = endOfToday.atZone(zone);
+
         return status == Status.OPEN
-                && duration.isAfter(ZonedDateTime.now());
+                && !duration.isBefore(todayEndOfDay);
     }
 
     public Long getId() {
