@@ -1,6 +1,5 @@
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import AuthProvider from "./AuthProvider";
-import useInitializeLocalStorage from "./useInitializeLocalStorage";
 import LoginForm from "./LoginForm";
 import PrivateRoute from "./PrivateRoute";
 import BuyerPage from "./BuyerPage";
@@ -8,9 +7,10 @@ import SellerPage from "./SellerPage";
 import { NotificationProvider } from "./NotificationContext";
 import ProductDetails from "./ProductDetails";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import useInitializeUsers from "./useInitializeUsers";
 
 function App() {
-  useInitializeLocalStorage();
+  useInitializeUsers();
   const queryClient = new QueryClient();
 
   return (

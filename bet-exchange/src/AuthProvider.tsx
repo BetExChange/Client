@@ -56,7 +56,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     queryKey: ["balance", userId],
     queryFn: fetchBalance,
     enabled: !!userId,
-    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
 
