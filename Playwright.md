@@ -1,6 +1,6 @@
 # 🎭 Playwright + TypeScript Quickstart Guide
 
-This short guide shows how to install Playwright, generate your first test using **Codegen**, and run it.
+This short guide shows how to install **Playwright**, generate your first test using **Codegen** and run it.
 
 ---
 
@@ -15,36 +15,70 @@ This short guide shows how to install Playwright, generate your first test using
 npm init playwright@latest
 ```
 
-Or if you are using Visual Studio Code, you can download the official playwright plugin.
+Or if you are using Visual Studio Code, you can download the [Playwright Test for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension.
 
 When prompted:
 - Select TypeScript
-- Accept the default test folder (e.g., tests)
+- Accept the default test folder (e.g., `tests`)
 - Choose to install the recommended browsers (Chromium, Firefox, WebKit)
 - (Optional) Accept HTML report and GitHub Actions CI setup
 
-This creates:
-- playwright.config.ts
-- Example tests in tests/
+This command scaffolds your project with:
+- `playwright.config.ts`
+- Example tests in `tests/` folder
 - Browser binaries installed locally
 
 ---
 
 ## 2. 🎥 Generate a Test Using Codegen
 
-To automatically generate a test script based on browser actions:
+To record browser actions and generate test code automatically:
 
 ```
 npx playwright codegen https://example.com
 ```
 
 This will:
-- Open a browser + Playwright Inspector
+- Launch a browser and the Playwright Inspector
 - Record every click, input, and navigation as code
-- Display the code in the Inspector in real time
-- Let you copy the generated code when finished
+- Display the generated TypeScript code in real time
+- Allow you to copy and use the code when done
 
 ---
 
 ## 3. ✍️ Create and Save the Test
-You can then paste the generated code to a file inside the /tests directory, with the **.specs.ts** or **.test.ts** extension.
+You can then paste the generated code to a file inside the `tests/` directory, with a **.spec.ts** or **.test.ts** extension.
+
+For example ```tests/example.spec.ts```:
+
+```
+import { test, expect } from '@playwright/test';
+
+test('recorded user journey', async ({ page }) => {
+  await page.goto('https://example.com');
+  // More actions recorded by Codegen...
+});
+```
+
+---
+
+## 4. ▶️ Run the Test
+
+Use the following commands to run your test suite:
+
+```
+# Run all tests
+npx playwright test
+
+# Run a specific test file
+npx playwright test tests/example.spec.ts
+
+# Run with the UI test explorer (great for debugging)
+npx playwright test --ui
+
+# Run with visible browser window
+npx playwright test --headed
+
+# Enable trace recording for debugging
+npx playwright test --trace on
+```
