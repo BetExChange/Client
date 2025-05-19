@@ -28,6 +28,29 @@ This command scaffolds your project with:
 - Example tests in `tests/` folder
 - Browser binaries installed locally
 
+Note: Playwright officially supports Windows, macOS, Debian, and Ubuntu.
+If you're using a different operating system, you may need to manually install additional dependencies. The Playwright initializer will guide you by listing any missing libraries.
+Alternatively, you can comment out the Webkit related lines in `playwright.config.ts`.
+```
+/* Configure projects for major browsers */
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
+  ]
+```
+
 ---
 
 ## 2. 🎥 Generate a Test Using Codegen
