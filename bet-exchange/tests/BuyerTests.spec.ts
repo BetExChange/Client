@@ -141,3 +141,24 @@ test('Matching an existing position', async ({ page }) => {
   await page.getByRole('img', { name: 'bell' }).locator('svg').click();
   await page.getByText('Your offer for product:').click();
 });
+
+
+test('Create an offer for a product', async ({ page }) => {
+  await page.getByRole('button', { name: 'Create an offer' }).click();
+  await page.getByRole('spinbutton', { name: '* Unit Price (€)' }).click();
+  await page.getByRole('spinbutton', { name: '* Unit Price (€)' }).fill('1');
+  await page.getByRole('spinbutton', { name: '* Unit Price (€)' }).press('Tab');
+  await page.getByRole('spinbutton', { name: '* Quantity' }).fill('100');
+  await page.getByRole('textbox', { name: '* Duration Until' }).click();
+  await page.getByRole('button', { name: 'Next month (PageDown)' }).click();
+  await page.getByRole('button', { name: 'Next month (PageDown)' }).click();
+  await page.getByRole('button', { name: 'Next month (PageDown)' }).click();
+  await page.getByTitle('-08-29').locator('div').click();
+  await page.getByRole('combobox', { name: '* Payment Method' }).click();
+  await page.getByTitle('Card A').locator('div').click();
+  await page.getByRole('combobox', { name: '* Location' }).click();
+  await page.getByTitle('Store').click();
+  await page.getByRole('button', { name: 'Place Offer' }).click();
+  await page.getByRole('img', { name: 'user' }).locator('svg').hover();
+  await expect(page.getByRole('menu')).toContainText('Balance: 9900 €');
+});
