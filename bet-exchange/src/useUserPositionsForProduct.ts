@@ -1,13 +1,15 @@
+import { useQuery } from '@tanstack/react-query';
+import { Position } from './Types';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const fetchUserPositions = async (userId: number, productId: number): Promise<Position[]> => {
-    const response = await fetch(`http://localhost:8080/api/users/${userId}/products/${productId}/positions`);
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/products/${productId}/positions`);
     if (!response.ok) {
       throw new Error("Failed to fetch positions");
     }
     return response.json();
-  };
-
-import { useQuery } from '@tanstack/react-query';
-import { Position } from './Types';
+};
 
 export const useUserPositionsForProduct = (userId: number, productId: number) => {
   return useQuery<Position[]>({

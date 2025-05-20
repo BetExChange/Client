@@ -4,6 +4,7 @@ import { AuthContextType, Balance, User } from "./Types"
 import { useQuery } from "@tanstack/react-query";;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const storedUserRole = localStorage.getItem("AuthUser") as 'buyer' | 'seller' | null;
@@ -44,7 +45,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const fetchBalance = async (): Promise<number> => {
-    const res = await fetch(`http://localhost:8080/api/balance/${userId}`);
+    const res = await fetch(`${API_BASE_URL}/balance/${userId}`);
+    console.log("API BASE:", import.meta.env.VITE_API_BASE_URL);
     if (!res.ok) {
       throw new Error(`Failed to fetch user balance (${res.status})`);
     }

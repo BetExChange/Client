@@ -13,10 +13,11 @@ type NotificationContextType = {
 };
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const fetchNotifications = async (userId: number) => {
   const res = await fetch(
-    `http://localhost:8080/api/users/${userId}/notifications`,
+    `${API_BASE_URL}/users/${userId}/notifications`,
   );
   if (!res.ok) {
     throw new Error("Failed to fetch notifications");
@@ -45,7 +46,7 @@ export const NotificationProvider: React.FC<{children: React.ReactNode;}> = ({ c
     const markAsReadMutation = useMutation< void, Error, number >({
       mutationFn: async (notificationId) => {
         const res = await fetch(
-            `http://localhost:8080/api/notifications/${notificationId}/read`,
+            `${API_BASE_URL}/notifications/${notificationId}/read`,
           { 
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -68,7 +69,7 @@ export const NotificationProvider: React.FC<{children: React.ReactNode;}> = ({ c
     const createNotificationMutation = useMutation< void, Error, { userId: number; message: string } >({
       mutationFn: async ({ userId, message }) => {
         const res = await fetch(
-          `http://localhost:8080/api/notifications`,
+          `${API_BASE_URL}/notifications`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

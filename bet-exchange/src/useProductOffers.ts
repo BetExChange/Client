@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { Offer } from "./Types";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const useProductOffers = (productId: number) => {
   return useQuery<Offer[], Error>({
     queryKey: ["offers", productId],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:8080/api/products/${productId}/offers`);
+      const response = await fetch(`${API_BASE_URL}/products/${productId}/offers`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch positions");

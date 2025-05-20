@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import { CreateOfferDTO, Offer } from './Types';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 type AddOfferInput =
   | Offer
   | (CreateOfferDTO & { positionId?: number; productTitle?: string });
@@ -34,7 +36,7 @@ type AddOfferInput =
         dto.productTitle = input.productTitle;
     }
   
-    const res = await fetch('http://localhost:8080/api/offers', {
+    const res = await fetch(`${API_BASE_URL}/offers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dto),

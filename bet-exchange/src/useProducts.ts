@@ -1,6 +1,7 @@
 import { Product, BestPositionsDTO } from "./Types";
 import { useQuery} from "@tanstack/react-query";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 type useProductsAPI = {
   products: Product[];
@@ -9,7 +10,7 @@ type useProductsAPI = {
 
 const fetchProducts = async () => {
   const res = await fetch(
-    `http://localhost:8080/api/products`,
+    `${API_BASE_URL}/products`,
   );
   if (!res.ok) {
     throw new Error(`Failed to fetch products (${res.status})`);
@@ -28,7 +29,7 @@ const useProducts = (): useProductsAPI => {
 
   const getBestPositions = async (product: Product): Promise<Product> => {
     const fetchBestPositions = async (productId: number): Promise<BestPositionsDTO> => {
-      const res = await fetch(`http://localhost:8080/api/products/${productId}/best-positions`);
+      const res = await fetch(`${API_BASE_URL}/products/${productId}/best-positions`);
       if (!res.ok) {
         throw new Error(`Failed to fetch best positions for product ${productId}`);
       }
