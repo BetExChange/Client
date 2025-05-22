@@ -14,6 +14,7 @@ import { FE_BASE_URL } from './src/config';
  */
 export default defineConfig({
   testDir: './tests',
+  workers: 1,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
