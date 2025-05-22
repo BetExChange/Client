@@ -1,5 +1,7 @@
 # End-to-End Testing
 
+Time Estimation: 4 hours
+
 ## Critical Buyer Flows
 
 ### 1. **Search for a product**
@@ -90,7 +92,7 @@ Preconditions:
 Testing Steps:
 1. Navigate to the products page
 2. Select a listed product by clicking on the "View Details" button
-3. A detailed product page should be displayed, showing the following information:
+3. There should be a "Product Details" section, showing the following information:
 - Title
 - Barcode
 - Brand
@@ -102,7 +104,7 @@ Testing Steps:
 5. There should be a "Positions" section that contains the following:
 - A table with the columns "Pieces", "Price", "Expiration"
 - An "Add Position" button
-6. There should be a "Exchange Activity" section that contains the following:
+6. There should be an "Exchange Activity" section that contains the following:
 - 2 date pickers "From(date):" and "To(date):"
 - A "Search" button
 - Last price matched
@@ -122,7 +124,7 @@ Testing Steps:
 1. Navigate to the products page
 2. Select "Product D" by clicking on the "View Details" button
 3. Press the "Add Position" button
-4. 5. A pop-up form with the following input fields should appear:
+4. A pop-up form with the following input fields should appear:
 - Min Price
 - Pieces
 - Expiration
@@ -148,7 +150,7 @@ Testing Steps:
 2. Select "Product D" by clicking on the "View Details" button
 3. Scroll to the "Current Market State" section
 4. Click the green button with the value of "12€"
-4. 5. A pop-up form with the following input fields should appear:
+4. A pop-up form with the following input fields should appear:
 - Min Price (pre-populated)
 - Pieces (pre-populated)
 - Expiration
