@@ -29,10 +29,7 @@ e2e-tests:
   before_script:
     - apk add --no-cache bash curl docker-compose
   script:
-    - docker-compose -f docker-compose.ci.yml up -d test-db backend frontend
-    - bash -c 'for i in {1..10}; do curl -s http://backend:8080/actuator/health && break || sleep 5; done'
-    - docker-compose -f docker-compose.ci.yml run --rm playwright
-    - docker-compose -f docker-compose.ci.yml down
+    - docker-compose -f docker-compose.ci.yml up --abort-on-container-exit --exit-code-from playwright
   needs:
     - build-frontend
     - build-backend
