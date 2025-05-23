@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { FE_BASE_URL } from './src/config';
+import dotenv from 'dotenv';
 
 /**
  * Read environment variables from file.
@@ -13,6 +13,8 @@ import { FE_BASE_URL } from './src/config';
  * See https://playwright.dev/docs/test-configuration.
  */
 const isCI = !!process.env.CI;
+
+dotenv.config({ path: process.env.ENV_PATH || '.env' });
 
 export default defineConfig({
   testDir: './tests',

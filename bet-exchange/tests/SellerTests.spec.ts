@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
+const FE = process.env.VITE_FE_BASE_URL;
+
 test.beforeEach(async ({ page }) => {
-  await page.goto('http://localhost:5173/login');
+  await page.goto(`${FE}/login`);
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'Seller' }).click();
 });
