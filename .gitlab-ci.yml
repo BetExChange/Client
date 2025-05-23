@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - e2e
 
 variables:
@@ -23,27 +24,25 @@ build-backend:
 
 e2e-tests:
   stage: e2e
-  image: docker:24.0.2
+  image: mcr.microsoft.com/playwright:v1.52.0-noble
   services:
     - docker:dind
   before_script:
-    - apk add --no-cache bash curl docker-compose
+    - apt-get update && apt-get install -y curl docker-compose
+    - docker-compose -f docker-compose.ci.yml up -d --build
+    - echo "Waiting for backend to be ready..."
+    - bash -c 'for i in {1..10}; do curl -s http://backend:8080/actuator/health && break || sleep 5; done'
   script:
-  - |
-    bash -c 'for i in {1..10}; do curl -s http://backend:8080/actuator/health && break || sleep 5; done'
-  - docker run --rm \
-      --network=test-net \
-      -v "$CI_PROJECT_DIR/bet-exchange:/tests" \
-      -v /dev/shm:/dev/shm \
-      -w /tests \
-      -e CI=true \
-      mcr.microsoft.com/playwright:v1.52.0-noble \
-      npx playwright test --config=playwright.config.ts
+    - cd bet-exchange
+    - npm ci
+    - npx playwright install --with-deps
+    - npx playwright test --config=playwright.config.ts
   after_script:
     - docker-compose -f docker-compose.ci.yml down
-  needs:
-    - build-frontend
-    - build-backend
+  artifacts:
+    when: always
+    paths:
+      - bet-exchange/playwright-report/
   only:
     - merge_requests
     - main
