@@ -1,7 +1,6 @@
 services:
   test-db:
     image: postgres:latest
-    container_name: test-db
     environment:
       POSTGRES_DB: testdb
       POSTGRES_USER: testuser
@@ -11,7 +10,6 @@ services:
 
   backend:
     image: my-backend:local
-    container_name: backend-test
     build:
       context: ./Server
       dockerfile: Dockerfile
@@ -29,7 +27,6 @@ services:
 
   frontend:
     image: my-frontend:local
-    container_name: frontend-test
     build:
       context: ./bet-exchange
       dockerfile: Dockerfile
@@ -39,6 +36,24 @@ services:
       - test-net
     ports:
       - "5173:5173"
+
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.52.0-noble
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - test-net
+    working_dir: /tests
+    volumes:
+      - ./bet-exchange:/tests
+      - /dev/shm:/dev/shm
+    entrypoint:
+      - "npx"
+      - "playwright"
+      - "test"
+      - "--config=playwright.config.ts"
+    # exit code of this service will reflect test success/failure
 
 networks:
   test-net:
