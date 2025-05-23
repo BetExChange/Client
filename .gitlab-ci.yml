@@ -1,6 +1,5 @@
 stages:
   - build
-  - test
   - e2e
 
 variables:
@@ -24,25 +23,26 @@ build-backend:
 
 e2e-tests:
   stage: e2e
-  image: mcr.microsoft.com/playwright:v1.52.0-noble
+  image: docker:24.0.2
   services:
     - docker:dind
   before_script:
-    - apt-get update && apt-get install -y curl docker-compose
-    - docker-compose -f docker-compose.ci.yml up -d --build
-    - echo "Waiting for backend to be ready..."
-    - bash -c 'for i in {1..10}; do curl -s http://backend:8080/actuator/health && break || sleep 5; done'
+    - apk add --no-cache bash curl docker-compose
   script:
-    - cd bet-exchange
-    - npm ci
-    - npx playwright install --with-deps
-    - npx playwright test --config=playwright.config.ts
-  after_script:
+    # 1. Bring up DB, backend, frontend
+    - docker-compose -f docker-compose.ci.yml up -d test-db backend frontend
+
+    # 2. Wait for Spring Boot
+    - bash -c 'for i in {1..10}; do curl -s http://backend:8080/actuator/health && break || sleep 5; done'
+
+    # 3. Run Playwright tests (will run in its own container)
+    - docker-compose -f docker-compose.ci.yml run --rm playwright
+
+    # 4. Tear down all services
     - docker-compose -f docker-compose.ci.yml down
-  artifacts:
-    when: always
-    paths:
-      - bet-exchange/playwright-report/
+  needs:
+    - build-frontend
+    - build-backend
   only:
     - merge_requests
     - main
