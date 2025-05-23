@@ -29,19 +29,16 @@ e2e-tests:
   before_script:
     - apk add --no-cache bash curl docker-compose
   script:
-    - docker-compose -f docker-compose.ci.yml up -d --build
-
-    - echo "Waiting for backend..."
-    - bash -c 'for i in {1..10}; do curl -s http://localhost:8080/actuator/health && break || sleep 5; done'
-
-    - docker run --rm \
-        --network test-net \
-        -v $CI_PROJECT_DIR/bet-exchange:/tests \
-        -v /dev/shm:/dev/shm \
-        -w /tests \
-        -e CI=true \
-        mcr.microsoft.com/playwright:v1.52.0-noble \
-        npx playwright test --config=playwright.config.ts
+  - |
+    bash -c 'for i in {1..10}; do curl -s http://backend:8080/actuator/health && break || sleep 5; done'
+  - docker run --rm \
+      --network=test-net \
+      -v "$CI_PROJECT_DIR/bet-exchange:/tests" \
+      -v /dev/shm:/dev/shm \
+      -w /tests \
+      -e CI=true \
+      mcr.microsoft.com/playwright:v1.52.0-noble \
+      npx playwright test --config=playwright.config.ts
   after_script:
     - docker-compose -f docker-compose.ci.yml down
   needs:
