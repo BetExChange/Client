@@ -38,7 +38,7 @@ services:
       - "5173:5173"
     environment:
       - VITE_API_BASE_URL=http://backend:8080/api
-      - VITE_FE_BASE_URL=http://frontend:5173/
+      - VITE_FE_BASE_URL=http://frontend:5173
 
   playwright:
     image: mcr.microsoft.com/playwright:v1.52.0-noble
@@ -53,13 +53,13 @@ services:
       - /dev/shm:/dev/shm
     environment:
       - VITE_API_BASE_URL=http://backend:8080/api
-      - VITE_FE_BASE_URL=http://frontend:5173/
+      - VITE_FE_BASE_URL=http://frontend:5173
     entrypoint:
       - /bin/bash
       - -lc
       - |
         echo "VITE_API_BASE_URL=http://backend:8080/api" > .env.ci
-        echo "VITE_FE_BASE_URL=http://frontend:5173/" >> .env.ci
+        echo "VITE_FE_BASE_URL=http://frontend:5173" >> .env.ci
         npm ci &&
         npx playwright install --with-deps &&
         npx playwright install msedge &&
