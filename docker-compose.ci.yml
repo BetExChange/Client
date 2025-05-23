@@ -51,16 +51,13 @@ services:
     volumes:
       - ./bet-exchange:/tests
       - /dev/shm:/dev/shm
-    entrypoint: ["/bin/bash", "-lc"]
-    command: |
-      # 1. Install your project deps (including @playwright/test)
-      npm ci
-
-      # 2. Ensure browsers & drivers are installed
-      npx playwright install --with-deps
-
-      # 3. Run your tests via your config
-      npx playwright test --config=playwright.config.ts
+    entrypoint:
+      - /bin/bash
+      - -lc
+    command:
+      - npm ci
+      - npx playwright install --with-deps
+      - npx playwright test --config=playwright.config.ts
 
 networks:
   test-net:
