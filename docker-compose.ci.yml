@@ -1,0 +1,45 @@
+services:
+  test-db:
+    image: postgres:latest
+    container_name: test-db
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass
+    networks:
+      - test-net
+
+  backend:
+    image: my-backend:local
+    container_name: backend-test
+    build:
+      context: ./Server
+      dockerfile: Dockerfile
+    depends_on:
+      - test-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://test-db:5432/testdb
+      SPRING_DATASOURCE_USERNAME: testuser
+      SPRING_DATASOURCE_PASSWORD: testpass
+      SPRING_PROFILES_ACTIVE: test
+    networks:
+      - test-net
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: my-frontend:local
+    container_name: frontend-test
+    build:
+      context: ./bet-exchange
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    networks:
+      - test-net
+    ports:
+      - "5173:5173"
+
+networks:
+  test-net:
+    driver: bridge
