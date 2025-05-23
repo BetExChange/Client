@@ -54,10 +54,10 @@ services:
     entrypoint:
       - /bin/bash
       - -lc
-    command: >
-      npm ci &&
-      npx playwright install --with-deps &&
-      npx playwright test --config=playwright.config.ts
+      - |
+        npm ci &&
+        npx playwright install --with-deps &&
+        npx playwright test --config=playwright.config.ts
 
 networks:
   test-net:
