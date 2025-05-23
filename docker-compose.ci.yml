@@ -51,6 +51,9 @@ services:
     volumes:
       - ./bet-exchange:/tests
       - /dev/shm:/dev/shm
+    environment:
+      - VITE_API_BASE_URL=http://backend:8080/api
+      - VITE_FE_BASE_URL=http://frontend:5173/
     entrypoint:
       - /bin/bash
       - -lc

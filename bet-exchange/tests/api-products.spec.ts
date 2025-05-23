@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
+const API = process.env.VITE_API_BASE_URL;
+
 test('GET /api/products should return expected product list', async ({ request }) => {
-  const response = await request.get('http://localhost:8080/api/products');
+  const response = await request.get(`${API}/products`);
   expect(response.ok()).toBeTruthy();
 
   const json = await response.json();

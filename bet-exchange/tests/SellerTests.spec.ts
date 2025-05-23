@@ -9,8 +9,15 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.afterEach(async ({ page }) => {
-  await page.getByRole('img', { name: 'user' }).locator('svg').hover();
-  await page.getByText('Logout').click();
+  const userIcon = page.getByRole('img', { name: 'user' }).locator('svg');
+  if (await userIcon.isVisible()) {
+    try {
+      await userIcon.hover();
+      await page.getByText('Logout').click();
+    } catch (e) {
+      console.warn('Logout failed in afterEach:', e.message);
+    }
+  }
 });
 
 test('View product details', async ({ page }) => {
