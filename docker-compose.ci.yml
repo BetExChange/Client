@@ -47,6 +47,7 @@ services:
     working_dir: /tests
     volumes:
       - ./bet-exchange:/tests
+      - ./playwright-report:/tests/playwright-report
       - /dev/shm:/dev/shm
     entrypoint:
       - /bin/bash
@@ -54,7 +55,6 @@ services:
       - |
         npm ci &&
         npx playwright install --with-deps &&
-        npx playwright install msedge &&
         npx playwright test --config=playwright.config.ts
 
 networks:
