@@ -23,49 +23,21 @@ build-backend:
 
 e2e-tests:
   stage: e2e
-  image: mcr.microsoft.com/playwright:v1.52.0-noble
-
-  variables:
-    VITE_FE_BASE_URL: http://frontend:5173
-    VITE_API_BASE_URL: http://backend:8080
-
+  image: docker:24.0.2
+  services:
+    - docker:dind
   before_script:
-    # install project deps and browsers
-    - npm ci
-    - npx playwright install --with-deps
-    - npx playwright install msedge
-
-    # wait up to 60s for backend to respond
-    - |
-      for i in $(seq 1 12); do
-        if curl -fsS http://backend:8080/actuator/health >/dev/null; then
-          echo "✅ backend is up"; break
-        fi
-        echo "⏳ waiting for backend… ($i/12)"; sleep 5
-      done
-
-    # wait up to 60s for frontend to respond
-    - |
-      for i in $(seq 1 12); do
-        if curl -fsS http://frontend:5173 >/dev/null; then
-          echo "✅ frontend is up"; break
-        fi
-        echo "⏳ waiting for frontend… ($i/12)"; sleep 5
-      done
-
+    - apk add --no-cache bash curl docker-compose
   script:
-    - npx playwright test --config=playwright.config.ts --reporter=html
-
+    - docker-compose -f docker-compose.ci.yml up --abort-on-container-exit --exit-code-from playwright
+  needs:
+    - build-frontend
+    - build-backend
   artifacts:
     when: always
     paths:
       - playwright-report/
-    expire_in: 1 week
-
-  needs:
-    - build-frontend
-    - build-backend
-
+    expire_in: 1 day
   only:
     - merge_requests
     - main
