@@ -12,9 +12,8 @@ import dotenv from 'dotenv';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-const isCI = !!process.env.CI;
 
-dotenv.config({ path: process.env.ENV_PATH || '.env' });
+dotenv.config({ path: '.env.ci' });
 
 export default defineConfig({
   testDir: './tests',
@@ -32,7 +31,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-     baseURL: isCI ? 'http://backend:8080' : 'http://localhost:8080',
+    //  baseURL: isCI ? 'http://backend:8080' : 'http://localhost:8080',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
