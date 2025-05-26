@@ -37,26 +37,26 @@ services:
     ports:
       - "5173:5173"
 
-  playwright:
-    image: mcr.microsoft.com/playwright:v1.52.0-noble
-    depends_on:
-      - frontend
-      - backend
-    networks:
-      - test-net
-    working_dir: /tests
-    volumes:
-      - ./bet-exchange:/tests
-      - ./playwright-report:/tests/playwright-report
-      - /dev/shm:/dev/shm
-    entrypoint:
-      - /bin/bash
-      - -lc
-      - |
-        npm ci &&
-        npx playwright install --with-deps &&
-        npx playwright install msedge &&
-        npx playwright test --config=playwright.config.ts
+  # playwright:
+  #   image: mcr.microsoft.com/playwright:v1.52.0-noble
+  #   depends_on:
+  #     - frontend
+  #     - backend
+  #   networks:
+  #     - test-net
+  #   working_dir: /tests
+  #   volumes:
+  #     - ./bet-exchange:/tests
+  #     - ./playwright-report:/tests/playwright-report
+  #     - /dev/shm:/dev/shm
+  #   entrypoint:
+  #     - /bin/bash
+  #     - -lc
+  #     - |
+  #       npm ci &&
+  #       npx playwright install --with-deps &&
+  #       npx playwright install msedge &&
+  #       npx playwright test --config=playwright.config.ts
 
 networks:
   test-net:

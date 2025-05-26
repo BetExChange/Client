@@ -22,32 +22,57 @@ build-backend:
     - docker build -t my-backend:local ./Server
 
 e2e-tests:
+  stage: e2e
   image: mcr.microsoft.com/playwright:v1.52.0-noble
   services:
     - name: postgres:latest
       alias: test-db
     - name: my-backend:local
       alias: backend
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://backend:8080/actuator/health"]
-        interval: 10s
-        retries: 5
     - name: my-frontend:local
       alias: frontend
-      healthcheck:
-        test: ["CMD", "curl", "-f", "http://frontend:5173"]
-        interval: 10s
-        retries: 5
+
   variables:
     VITE_FE_BASE_URL: http://frontend:5173
-    BACKEND_URL: http://backend:8080
+    BACKEND_URL:    http://backend:8080
+
   before_script:
+    # install project deps and browsers
     - npm ci
     - npx playwright install --with-deps
+    - npx playwright install msedge
+
+    # wait up to 60s for backend to respond
+    - |
+      for i in $(seq 1 12); do
+        if curl -fsS http://backend:8080/actuator/health >/dev/null; then
+          echo "✅ backend is up"; break
+        fi
+        echo "⏳ waiting for backend… ($i/12)"; sleep 5
+      done
+
+    # wait up to 60s for frontend to respond
+    - |
+      for i in $(seq 1 12); do
+        if curl -fsS http://frontend:5173 >/dev/null; then
+          echo "✅ frontend is up"; break
+        fi
+        echo "⏳ waiting for frontend… ($i/12)"; sleep 5
+      done
+
   script:
-    - echo "Waiting for services…"; sleep 15
     - npx playwright test --config=playwright.config.ts --reporter=html
+
   artifacts:
     when: always
     paths:
       - playwright-report/
+    expire_in: 1 week
+
+  needs:
+    - build-frontend
+    - build-backend
+
+  only:
+    - merge_requests
+    - main
