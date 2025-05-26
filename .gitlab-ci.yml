@@ -24,17 +24,10 @@ build-backend:
 e2e-tests:
   stage: e2e
   image: mcr.microsoft.com/playwright:v1.52.0-noble
-  services:
-    - name: postgres:latest
-      alias: test-db
-    - name: my-backend:local
-      alias: backend
-    - name: my-frontend:local
-      alias: frontend
 
   variables:
     VITE_FE_BASE_URL: http://frontend:5173
-    BACKEND_URL:    http://backend:8080
+    VITE_API_BASE_URL: http://backend:8080
 
   before_script:
     # install project deps and browsers
