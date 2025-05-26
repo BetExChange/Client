@@ -37,10 +37,11 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.CI ? 'http://backend:8080' : 'http://localhost:8080',
     screenshot: 'only-on-failure',
-
+    navigationTimeout: 30 * 1000,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
+  globalTimeout: 60 * 60 * 1000,
 
   /* Configure projects for major browsers */
   projects: [
