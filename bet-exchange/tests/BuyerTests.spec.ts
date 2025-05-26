@@ -21,9 +21,9 @@ const FE = process.env.VITE_FE_BASE_URL;
 // });
 
 test('Searching for product a', async ({ page }) => {
-  await page.goto(`${FE}/login`);
-  await page.waitForLoadState('networkidle');
-  await page.getByRole('button', { name: 'Buyer' }).click();
+  // await page.goto(`${FE}/login`);
+  // await page.waitForLoadState('networkidle');
+  // await page.getByRole('button', { name: 'Buyer' }).click();
   await expect(page.getByText('Product A1.25 €349.1 €')).toBeVisible();
   await expect(page.getByText('Product B1.75 €129.99 €')).toBeVisible();
   await expect(page.getByText('Product CCreate an offer')).toBeVisible();
