@@ -5,6 +5,7 @@ const FE = process.env.VITE_FE_BASE_URL;
 test.beforeEach(async ({ page }) => {
   await page.goto(`${FE}/login`);
   await page.waitForLoadState('networkidle');
+  await page.screenshot({ path: 'screenshot2.png' });
   await page.getByRole('button', { name: 'Seller' }).click();
 });
 

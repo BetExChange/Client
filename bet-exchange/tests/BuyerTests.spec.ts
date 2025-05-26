@@ -2,28 +2,28 @@ import { test, expect } from '@playwright/test';
 
 const FE = process.env.VITE_FE_BASE_URL;
 
-// test.beforeEach(async ({ page }) => {
-//   await page.goto(`${FE}/login`);
-//   await page.waitForLoadState('networkidle');
-//   await page.getByRole('button', { name: 'Buyer' }).click();
-// });
+test.beforeEach(async ({ page }) => {
+  await page.goto(`${FE}/login`);
+  await page.waitForLoadState('networkidle');
+  await page.screenshot({ path: 'screenshot.png' });
+  const buyerButton = page.locator('button:has-text("Buyer")');
+  await expect(buyerButton).toBeVisible();
+  await buyerButton.click();
+});
 
-// test.afterEach(async ({ page }) => {
-//   const userIcon = page.getByRole('img', { name: 'user' }).locator('svg');
-//   if (await userIcon.isVisible()) {
-//     try {
-//       await userIcon.hover();
-//       await page.getByText('Logout').click();
-//     } catch (e) {
-//       console.warn('Logout failed in afterEach:', e.message);
-//     }
-//   }
-// });
+test.afterEach(async ({ page }) => {
+  const userIcon = page.getByRole('img', { name: 'user' }).locator('svg');
+  if (await userIcon.isVisible()) {
+    try {
+      await userIcon.hover();
+      await page.getByText('Logout').click();
+    } catch (e) {
+      console.warn('Logout failed in afterEach:', e.message);
+    }
+  }
+});
 
 test('Searching for product a', async ({ page }) => {
-  // await page.goto(`${FE}/login`);
-  // await page.waitForLoadState('networkidle');
-  // await page.getByRole('button', { name: 'Buyer' }).click();
   await expect(page.getByText('Product A1.25 €349.1 €')).toBeVisible();
   await expect(page.getByText('Product B1.75 €129.99 €')).toBeVisible();
   await expect(page.getByText('Product CCreate an offer')).toBeVisible();
@@ -46,15 +46,6 @@ test('Searching for product a', async ({ page }) => {
   await page.getByRole('searchbox', { name: 'Search for products...' }).fill('asfafsaf');
   await page.getByRole('searchbox', { name: 'Search for products...' }).press('Enter');
   await expect(page.locator('#root')).toContainText('No data');
-  const userIcon = page.getByRole('img', { name: 'user' }).locator('svg');
-  if (await userIcon.isVisible()) {
-    try {
-      await userIcon.hover();
-      await page.getByText('Logout').click();
-    } catch (e) {
-      console.warn('Logout failed in afterEach:', e.message);
-    }
-  }
 });
 
 test('Create an offer for a product', async ({ page }) => {
