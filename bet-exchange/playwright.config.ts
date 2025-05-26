@@ -7,7 +7,8 @@ import dotenv from 'dotenv';
  */
 // import dotenv from 'dotenv';
 // import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// dotenv.config({ path: path.resolve(__dirname, '.env.ci') });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -19,7 +20,7 @@ export default defineConfig({
   testDir: './tests',
   workers: 1,
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   //forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -31,7 +32,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    //  baseURL: isCI ? 'http://backend:8080' : 'http://localhost:8080',
+     baseURL: process.env.CI ? 'http://backend:8080' : 'http://localhost:8080',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
