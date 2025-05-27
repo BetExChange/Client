@@ -36,6 +36,9 @@ services:
       - test-net
     ports:
       - "5173:5173"
+    environment:
+    - VITE_API_BASE_URL=http://backend:8080/api
+    - VITE_FE_BASE_URL=http://frontend:5173
 
   playwright:
     image: mcr.microsoft.com/playwright:v1.52.0-noble
