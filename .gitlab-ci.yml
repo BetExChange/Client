@@ -27,10 +27,44 @@ e2e-tests:
   image: docker:24.0.2
   services:
     - docker:dind
+  variables:
+    # point docker CLI to the DinD daemon
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
   before_script:
+    # install what we need to stand up the stack
     - apk add --no-cache bash curl docker-compose
   script:
-    - docker-compose -f docker-compose.ci.yml up --abort-on-container-exit --exit-code-from playwright
+    # 1) bring up your DB + backend + frontend
+    - docker-compose -f docker-compose.ci.yml up -d
+
+    # 2) wait for the frontend to actually respond
+    - |
+      for i in $(seq 1 15); do
+        if curl -sSf $BASE_URL/login; then
+          echo "✅ frontend is live"
+          break
+        fi
+        echo "⏳ waiting for frontend… ($i/15)"
+        sleep 2
+      done
+
+    # 3) fire off Playwright tests in a fresh container on our network
+    - |
+      docker run --rm \
+        --network test-net \
+        -v $CI_PROJECT_DIR/bet-exchange:/tests \
+        -v $CI_PROJECT_DIR/playwright-report:/tests/playwright-report \
+        -e BASE_URL=$BASE_URL \
+        -w /tests \
+        mcr.microsoft.com/playwright:v1.52.0-noble \
+        bash -lc "\
+          npm ci && \
+          npx playwright install --with-deps && \
+          npx playwright install msedge && \
+          npx playwright test --config=playwright.config.ts \
+        "
+
   needs:
     - build-frontend
     - build-backend
