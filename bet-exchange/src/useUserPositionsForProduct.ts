@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Position } from './Types';
 
-const API_BASE_URL = process.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const fetchUserPositions = async (userId: number, productId: number): Promise<Position[]> => {
     const response = await fetch(`${API_BASE_URL}/users/${userId}/products/${productId}/positions`);

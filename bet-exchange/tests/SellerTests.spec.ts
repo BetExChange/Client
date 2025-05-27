@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(`http://frontend:5173/login`);
+  await page.goto(`/login`);
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'Seller' }).click();
 });

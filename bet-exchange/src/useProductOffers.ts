@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Offer } from "./Types";
 
-const API_BASE_URL = process.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useProductOffers = (productId: number) => {
   return useQuery<Offer[], Error>({

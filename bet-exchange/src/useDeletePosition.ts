@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 
-const API_BASE_URL = process.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const deletePositionFromApi = async (positionId: number): Promise<void> => {
   const response = await fetch(`${API_BASE_URL}/positions/${positionId}`, {
