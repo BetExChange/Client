@@ -39,13 +39,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    launchOptions: {
-      args: [
-        '--disable-gpu',
-        '--disable-software-rasterizer',
-        '--mute-audio',
-      ],
-    },
+    headless: false,
   },
   retries: 2,
 

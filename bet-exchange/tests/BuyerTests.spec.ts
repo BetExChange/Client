@@ -1,11 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-const FE = process.env.VITE_FE_BASE_URL;
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(`${FE}/login`);
+  await page.goto(`/login`);
   await page.waitForLoadState('networkidle');
-  await page.screenshot({ path: 'screenshot.png' });
   const buyerButton = page.locator('button:has-text("Buyer")');
   await expect(buyerButton).toBeVisible();
   await buyerButton.click();
