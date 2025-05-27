@@ -1,27 +1,10 @@
 stages:
-  - build
   - e2e
 
 variables:
   DOCKER_DRIVER: overlay2
   VITE_FE_BASE_URL: http://frontend:5173
   VITE_API_BASE_URL: https://backend:8080/api
-
-build-frontend:
-  stage: build
-  image: docker:24.0.2
-  services:
-    - docker:dind
-  script:
-    - docker build -t my-frontend:local ./bet-exchange
-
-build-backend:
-  stage: build
-  image: docker:24.0.2
-  services:
-    - docker:dind
-  script:
-    - docker build -t my-backend:local ./Server
 
 e2e-tests:
   stage: e2e
@@ -31,10 +14,9 @@ e2e-tests:
   before_script:
     - apk add --no-cache bash curl docker-compose
   script:
+    # Build frontend and backend locally in this job
+    - docker-compose -f docker-compose.ci.yml build
     - docker-compose -f docker-compose.ci.yml up --abort-on-container-exit --exit-code-from playwright
-  needs:
-    - build-frontend
-    - build-backend
   artifacts:
     when: always
     paths:
