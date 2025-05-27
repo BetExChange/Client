@@ -25,20 +25,28 @@ build-backend:
 e2e-tests:
   stage: e2e
   image: docker:24.0.2
+
+  # 1) Start Docker-in-Docker properly
   services:
-    - docker:dind
+    - name: docker:dind
+      alias: docker
+      command: ["--tls=false"]
+
   variables:
-    # point docker CLI to the DinD daemon
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_TLS_CERTDIR: ""
+    BASE_URL: "http://frontend:5173"
+
+  privileged: true
+
   before_script:
-    # install what we need to stand up the stack
     - apk add --no-cache bash curl docker-compose
+
   script:
-    # 1) bring up your DB + backend + frontend
+    # 2) Spin up your DB, backend, and frontend on test-net
     - docker-compose -f docker-compose.ci.yml up -d
 
-    # 2) wait for the frontend to actually respond
+    # 3) Wait until the frontend really responds
     - |
       for i in $(seq 1 15); do
         if curl -sSf $BASE_URL/login; then
@@ -49,7 +57,7 @@ e2e-tests:
         sleep 2
       done
 
-    # 3) fire off Playwright tests in a fresh container on our network
+    # 4) Run Playwright in a one-off container on the same network
     - |
       docker run --rm \
         --network test-net \
