@@ -4,9 +4,7 @@ import { test, expect } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.goto(`/login`);
   await page.waitForLoadState('networkidle');
-  const buyerButton = page.locator('button:has-text("Buyer")');
-  await expect(buyerButton).toBeVisible();
-  await buyerButton.click();
+  await page.getByRole('button', { name: 'Buyer' }).click();
 });
 
 test.afterEach(async ({ page }) => {
