@@ -4,7 +4,7 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  CI: "true"
+  VITE_FE_BASE_URL: http://frontend:5173
 
 build-frontend:
   stage: build
