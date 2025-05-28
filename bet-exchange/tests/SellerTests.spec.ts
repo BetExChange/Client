@@ -108,15 +108,8 @@ test('Create a position for a product', async ({ page }) => {
   // Click the date picker to open the calendar
   await page.getByRole('textbox', { name: '* Expiration :' }).click();
 
-  // If month is different, use getByTitle
-  if (yesterday.getMonth() !== today.getMonth()) {
-    // Format: '-MM-DD', e.g. '-03-01'
-    const title = `-${mm}-${dd}`;
-    await page.getByTitle(title).locator('div').click();
-  } else {
-    // Use exact text (day number)
-    await page.getByText(dd.replace(/^0/, ''), { exact: true }).click();
-  }
+  const title = `-${mm}-${dd}`;
+  await page.getByTitle(title).locator('div').click();
 
   await page.getByRole('button', { name: 'OK' }).click();
   await expect(failureMessage.nth(1)).toBeVisible();
