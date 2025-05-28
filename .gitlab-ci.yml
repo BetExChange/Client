@@ -16,6 +16,7 @@ e2e-tests:
   script:
     # Build frontend and backend locally in this job
     # - docker-compose -f docker-compose.ci.yml build
+    - docker-compose -f docker-compose.ci.yml down -v
     - docker-compose -f docker-compose.ci.yml up --abort-on-container-exit --exit-code-from playwright
   artifacts:
     when: always
